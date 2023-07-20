@@ -76,32 +76,38 @@ function GridPage() {
         ) : (
           <div className="flex-grow flex items-center justify-center ">
             <div>
-              <div className="flex justify-center sm:justify-between">
-                <div className="sm:w-36 md:w-24 h-full mt-4 flex justify-center"></div>
+              <div className="grid grid-flow-col grid-auto-max pl-1">
+                <div className="w-36 sm:w-40 md:w-32 h-full mt-41"></div>
 
                 {cols.map((actorInfo) => (
                   <div
-                    className="w-12 sm:w-36 md:w-36 flex justify-center items-center px-3 pb-1"
+                    className="w-12 sm:w-36 md:w-36 px-3 pb-1"
                     key={actorInfo.id}
                   >
                     <img
                       src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
+                      style={{width: "120px" ,
+                      height: "120px",
+                    objectFit: "cover"}}
                       alt={actorInfo.name}
                     />
                   </div>
                 ))}
               </div>
-              <div className="flex items-center">
-                <div>
+              <div className="flex justify-evenly">
+                <div className="grid grid-column-3">
                   {rows.map((actorInfo) => (
                     <div
-                      className="w-12 sm:w-36 md:w-36 flex justify-center items-center px-3 pb-1"
+                      className="w-12 sm:w-36 md:w-36 flex justify-evenly items-center px-3 pb-1"
                       key={actorInfo.id}
                     >
-                      <img
-                        src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
-                        alt={actorInfo.name}
-                      />
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
+                      style={{width: "120px" ,
+                      height: "120px",
+                    objectFit: "cover"}}
+                      alt={actorInfo.name}
+                    />
                     </div>
                   ))}
                 </div>
