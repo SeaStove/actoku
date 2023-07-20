@@ -69,7 +69,9 @@ function GridPage() {
 
   return (
     <div className="w-screen h-full min-h-screen flex justify-center items-center  text-white flex-col pr-4">
-      <h1 className="w-full text-center  mt-3 text-8xl md:text-9xl">Actoku</h1>
+      <h1 className="w-full text-center md:text-left p-4 text-8xl md:text-3xl">
+        Actoku
+      </h1>
       <div className="mt-4 flex flex-row flex-shrink-0 flex-grow justify-center">
         {!cols || !rows ? (
           <LoadingSpinner />
@@ -77,30 +79,11 @@ function GridPage() {
           <div className="flex flex-grow flex-row items-center justify-center ">
             <div className="flex flex-row items-center">
               <div className="grid grid-col-1 grid-row-2 grid-auto-max pl-1">
-              <div className="grid grid-flow-col grid-auto-max">
-                <div className="w-36 sm:w-40 md:w-32 h-full mt-41"></div>
-              {cols.map((actorInfo) => (
-                  <div
-                    className="w-12 sm:w-36 md:w-36 px-3 pb-1"
-                    key={actorInfo.id}
-                  >
-                    <img
-                      src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
-                      style={{
-                        width: "120px",
-                        height: "120px",
-                        objectFit: "cover",
-                      }}
-                      alt={actorInfo.name}
-                    />
-                  </div>
-                ))}
-                </div>
                 <div className="grid grid-flow-col grid-auto-max">
-                <div className="grid grid-column-3">
-                  {rows.map((actorInfo) => (
+                  <div className="w-36 sm:w-40 md:w-32 h-full mt-41"></div>
+                  {cols.map((actorInfo) => (
                     <div
-                      className="w-12 sm:w-36 md:w-36 flex justify-evenly items-center px-3 pb-1"
+                      className="w-12 sm:w-36 md:w-36 px-3 pb-1"
                       key={actorInfo.id}
                     >
                       <img
@@ -115,17 +98,36 @@ function GridPage() {
                     </div>
                   ))}
                 </div>
-                <div className="rounded-xl  dark:border-gray-950 grid grid-cols-3 grid-rows-3 overflow-hidden gap-1">
-                  {squares.map((val) => (
-                    <button
-                      className="border-r border-b hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-center w-24 sm:w-36 md:w-48 h-24 sm:h-36 md:h-48 transition-colors duration-75 overflow-hidden dark:border-gray-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#59d185] focus-visible:z-50"
-                      key={val.toString()}
-                      onClick={() => {
-                        setGridSelected(val);
-                      }}
-                    />
-                  ))}
-                </div>
+                <div className="grid grid-flow-col grid-auto-max">
+                  <div className="grid grid-column-3">
+                    {rows.map((actorInfo) => (
+                      <div
+                        className="w-12 sm:w-36 md:w-36 flex justify-evenly items-center px-3 pb-1"
+                        key={actorInfo.id}
+                      >
+                        <img
+                          src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
+                          style={{
+                            width: "120px",
+                            height: "120px",
+                            objectFit: "cover",
+                          }}
+                          alt={actorInfo.name}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="rounded-xl  dark:border-gray-950 grid grid-cols-3 grid-rows-3 overflow-hidden gap-1">
+                    {squares.map((val) => (
+                      <button
+                        className="border-r border-b hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-center w-24 sm:w-36 md:w-48 h-24 sm:h-36 md:h-48 transition-colors duration-75 overflow-hidden dark:border-gray-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#59d185] focus-visible:z-50"
+                        key={val.toString()}
+                        onClick={() => {
+                          setGridSelected(val);
+                        }}
+                      />
+                    ))}
+                  </div>
                 </div>
                 {/* <div className="sm:w-36 md:w-48 h-full hidden justify-center sm:flex">
                   <GuessBlock />
@@ -146,22 +148,26 @@ function GridPage() {
           setGridSelected={setGridSelected}
         />
       )}
-      <span className="text-gray-500 hidden sm:block mt-4 mb-2">
-        This page was made by{" "}
-        <a href="https://github.com/ChaseGHMU" target="_blank">
-          Chase Allen{" "}
-        </a>
-        and{" "}
-        <a href="https://github.com/SeaStove" target="_blank">
-          Christian Stovall{" "}
-        </a>
-        Check out the code on{" "}
-        <a href="https://github.com/SeaStove/actoku" target="_blank">
-          GitHub
-        </a>
-        . If you have any feature requests or bugs to report please do so in the{" "}
-        <a href="https://github.com/SeaStove/actoku/issues">issues</a> tab.
-      </span>
+      <div className="text-gray-500 sm:block mt-4 mb-2 flex justify-center items-center">
+        <p>
+          This page was made by{" "}
+          <a href="https://github.com/ChaseGHMU" target="_blank">
+            Chase Allen{" "}
+          </a>
+          and{" "}
+          <a href="https://github.com/SeaStove" target="_blank">
+            Christian Stovall{" "}
+          </a>
+          Check out the code on{" "}
+          <a href="https://github.com/SeaStove/actoku" target="_blank">
+            GitHub.
+          </a>
+        </p>
+        <p className="text-center">
+          If you have any feature requests or bugs to report please do so in the{" "}
+          <a href="https://github.com/SeaStove/actoku/issues">issues</a> tab.
+        </p>
+      </div>
     </div>
   );
 }

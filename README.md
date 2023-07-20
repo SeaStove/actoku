@@ -1,3 +1,3 @@
 # Actoku
 
-Basically Immaculate Grid but for Actoku
+Basically Immaculate Grid but for Actors
