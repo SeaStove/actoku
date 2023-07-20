@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "./LoadingSpinner";
 
@@ -12,6 +12,8 @@ export default function GuessPanel({
 
   const [movieId, setMovieId] = useState("");
 
+  const [inMovie, setInMovie] = useState<boolean | null>();
+
   const { data: movies, isLoading } = useQuery<{
     results: { id; poster_path }[];
   }>([`search/movie?query=${searchQuery}`], {
@@ -19,13 +21,32 @@ export default function GuessPanel({
   });
 
   const { data: cast} = useQuery<{
-    cast: { id: number; }[];
+    cast: { id; }[];
   }>([`movie/${movieId}/credits`], {
     enabled: movieId.length > 0
   });
 
+  const onClickMovieSelect = ((movie) => {
+    setMovieId(`${movie.id}`)
+    incrementCounter()
+  })
+
+  useEffect(() => {
+    if (cast) {
+    checkIfActorsInMovie(cast)
+    }
+  }, [cast])
+
   const incrementCounter = (() => {
     setCount((currentCount) => currentCount + 1);
+  })
+
+  const checkIfActorsInMovie = ((somethingBesidesCast) => {
+    console.log(somethingBesidesCast.cast)
+    console.log(colActor.name + colActor.id)
+    const test = somethingBesidesCast.cast.filter((actor) => actor?.id === colActor.id || actor?.id === rowActor.id)
+    console.log(test)
+    setInMovie(test.length === 2)
   })
 
   const MovieButton = ({ movie }) => {
@@ -36,7 +57,7 @@ export default function GuessPanel({
     return (
       <button 
       className="flex items-center justify-start w-full px-2"
-      onClick={incrementCounter}
+      onClick={() => onClickMovieSelect(movie)}
       >
         <div className="flex items-center justify-start w-12">
           <img
@@ -90,6 +111,16 @@ export default function GuessPanel({
               {movies.results.slice(0, 5).map((movie) => (
                 <MovieButton movie={movie} key={movie.id} />
               ))}
+            </div>
+          )}
+          {inMovie && (
+            <div className="text-center text-2xl text-green-500  flex justify-center items-center mt-4"> 
+            {rowActor.name} and {colActor.name} was in it
+            </div>
+          )}
+          {inMovie === false && (
+            <div className="text-center text-2xl text-red-500 flex justify-center items-center mt-4">
+               {rowActor.name} and {colActor.name} were not in it
             </div>
           )}
         </div>
