@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import GuessPanel from "./GuessPanel";
 import mockdata from "./assets/mockdata.json";
 import LoadingSpinner from "./LoadingSpinner";
@@ -148,7 +148,8 @@ function GridPage() {
         <a href="https://github.com/SeaStove/actoku" target="_blank">
           GitHub
         </a>
-        .
+        . If you have any feature requests or bugs to report please do so in the{" "}
+        <a href="https://github.com/SeaStove/actoku/issues">issues</a> tab.
       </span>
     </div>
   );
