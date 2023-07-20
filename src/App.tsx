@@ -8,12 +8,11 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       queryFn: async ({ queryKey: [url] }) => {
-        const options: { headers?: { Authorization: string } } = {};
-        const access_token = localStorage.getItem("access_token");
-        if (access_token) {
-          options["headers"] = { Authorization: `Bearer ${access_token}` };
-        }
-        const { data } = await axios.get(`${baseUrl}/${url}`, options);
+        const { data } = await axios.get(`${baseUrl}/${url}`, {
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
+          },
+        });
         return data;
       },
     },
