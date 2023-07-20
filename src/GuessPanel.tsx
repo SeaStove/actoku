@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function GuessPanel({
   rowActor = {
@@ -16,7 +17,31 @@ export default function GuessPanel({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: movies } = useQuery([`search/movie?query=${searchQuery}`]);
+  const { data: movies, isLoading } = useQuery<{ results: {}[] }>(
+    [`search/movie?query=${searchQuery}`],
+    {
+      enabled: searchQuery.length > 0,
+    }
+  );
+
+  const MovieButton = ({ movie }) => {
+    const poster_path = movie.poster_path
+      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      : "https://via.placeholder.com/300x500";
+
+    return (
+      <button className="flex items-center justify-start w-full px-2">
+        <div className="flex items-center justify-start w-12">
+          <img
+            src={poster_path}
+            alt={movie.title}
+            className="w-full h-full rounded-md"
+          />
+        </div>
+        <div className="ml-2 text-left">{movie.title}</div>
+      </button>
+    );
+  };
 
   return (
     <div
@@ -40,7 +65,7 @@ export default function GuessPanel({
             <input
               autoFocus
               type="text"
-              className={`w-full rounded-lg h-12 px-2 `}
+              className={`w-full rounded-lg h-12 px-2`}
               placeholder="Search for a movie"
               value={searchQuery}
               onChange={(e) => {
@@ -48,6 +73,18 @@ export default function GuessPanel({
               }}
             />
           </div>
+          {searchQuery.length > 0 && isLoading && (
+            <div className="flex items-center justify-center mt-2">
+              <LoadingSpinner />
+            </div>
+          )}
+          {movies?.results && (
+            <div>
+              {movies.results.slice(0, 5).map((movie, index) => (
+                <MovieButton movie={movie} key={movie.id} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
