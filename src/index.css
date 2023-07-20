@@ -2,19 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: Roboto;
-  src: url("assets/fonts/Roboto-Regular.ttf") format("truetype");
-}
-@font-face {
-  font-family: BebasNeue;
-  src: url("assets/fonts/BebasNeue-Regular.ttf") format("truetype");
-}
-
-.bebas {
-  font-family: BebasNeue;
-}
-
 :root {
   font-family: Roboto, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

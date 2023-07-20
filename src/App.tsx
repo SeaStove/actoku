@@ -2,7 +2,7 @@ import axios from "axios";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import GridPage from "./GridPage";
 
-const baseUrl = "";
+const baseUrl = "https://api.themoviedb.org/3";
 
 const queryClient = new QueryClient({
   defaultOptions: {
