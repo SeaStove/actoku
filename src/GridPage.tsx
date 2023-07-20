@@ -1,13 +1,21 @@
 import { useState, useEffect, useMemo } from "react";
 import GuessPanel from "./GuessPanel";
+import mockdata from "./assets/mockdata.json";
 
 function GridPage() {
+
+  interface ActorData {
+    name: string;
+    id: number;
+    imageUrl: string;
+  }
+
   // Number of guesses
   const [count, setCount] = useState(0);
   // Row Actor IDs
-  const [rows] = useState([287, 1892, 1893]);
+  const [rows, setRows] = useState<ActorData[]>();
   // Column Actor IDs
-  const [cols] = useState([1461, 287, 1204]);
+  const [cols, setCols] = useState<ActorData[]>();
   // A tuple of [row, col] that is selected
   const [gridSelected, setGridSelected] = useState<number[] | null>();
   const squares = [
@@ -46,12 +54,9 @@ function GridPage() {
   }, []);
 
   useEffect(() => {
-    // if (currentDate && gameMap && actorData) {
-    //   const todaysGame = gameMap[currentDate];
-    //   setRows(todaysGame.stats);
-    //   setCols(todaysGame.teams.map((teamId) => actorData.teams[teamId]));
-    // }
-  }, [currentDate]);
+    setRows(mockdata.row as ActorData[])
+    setCols(mockdata.column as ActorData[])
+  }, []);
 
   const LoadingSpinner = () => (
     <div role="status">
@@ -93,27 +98,30 @@ function GridPage() {
         ) : (
           <div className="flex-grow flex items-center justify-center ">
             <div>
-              <div className="flex justify-evenly sm:justify-start">
-                <div className=" w-20 sm:w-36 md:w-48 flex justify-center items-center"></div>
-                {/* {cols.map((teamData) => (
-                  <div
-                    className="w-20 sm:w-36 md:w-48 flex justify-center items-center px-3 pb-1"
-                    key={teamData.id}
+              <div className="flex justify-center sm:justify-between">
+              <div className="sm:w-36 md:w-24 h-full mt-4 flex justify-center"></div>
+
+                { cols.map((actorInfo) => (
+                    <div
+                    className="w-12 sm:w-36 md:w-36 flex justify-center items-center px-3 pb-1"
+                    key={actorInfo.id}
                   >
-                    <img src={teamData.logo} alt={teamData.name} />
+                    <img src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`} alt={actorInfo.name} />
                   </div>
-                ))} */}
+                ))
+                }
               </div>
               <div className="flex items-center">
                 <div>
-                  {Object.keys(rows ?? {}).map((statName) => (
+              { rows.map((actorInfo) => (
                     <div
-                      className="flex items-center justify-center text-md md:text-3xl w-20 sm:w-36 md:w-48 h-24 sm:h-36 md:h-48 p-3 text-center"
-                      key={statName}
-                    >
-                      {`${camelCaseToReadable(statName)} > ${rows[statName]}`}
-                    </div>
-                  ))}
+                    className="w-12 sm:w-36 md:w-36 flex justify-center items-center px-3 pb-1"
+                    key={actorInfo.id}
+                  >
+                    <img src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`} alt={actorInfo.name} />
+                  </div>
+                ))
+                }
                 </div>
                 <div className="rounded-xl  dark:border-gray-950 grid grid-cols-3 grid-rows-3 overflow-hidden gap-1">
                   {squares.map((val) => (
@@ -127,11 +135,11 @@ function GridPage() {
                     />
                   ))}
                 </div>
-                <div className="sm:w-36 md:w-48 h-full hidden justify-center sm:flex">
+                {/* <div className="sm:w-36 md:w-48 h-full hidden justify-center sm:flex">
                   <GuessBlock />
-                </div>
+                </div> */}
               </div>
-              <div className="sm:w-36 md:w-48 h-full mt-4 flex justify-center sm:hidden">
+              <div className="sm:w-36 md:w-48 h-full mt-4 flex justify-center">
                 <GuessBlock />
               </div>
             </div>
