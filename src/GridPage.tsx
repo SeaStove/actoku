@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 function GridPage() {
   const [count, setCount] = useState(0);
-  const [rows, setRows] = useState([]);
-  const [cols, setCols] = useState([]);
+  const [rows] = useState([]);
+  const [cols] = useState([]);
   const [gridSelected, setGridSelected] = useState<number[] | null>();
   const squares = [
     // [row, col]
