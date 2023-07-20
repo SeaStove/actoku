@@ -150,13 +150,17 @@ function GridPage() {
       )}
       <div className="text-gray-500 sm:block mt-4 mb-2 flex justify-center items-center">
         <p>
-          This page was made by{" "}
+          This game was made by{" "}
           <a href="https://github.com/ChaseGHMU" target="_blank">
-            Chase Allen{" "}
+            Chase Allen
           </a>
-          and{" "}
+          ,{" "}
+          <a href="https://github.com/jkalna22" target="_blank">
+            Joshua Kalna
+          </a>
+          , and{" "}
           <a href="https://github.com/SeaStove" target="_blank">
-            Christian Stovall{" "}
+            Christian Stovall.{" "}
           </a>
           Check out the code on{" "}
           <a href="https://github.com/SeaStove/actoku" target="_blank">
