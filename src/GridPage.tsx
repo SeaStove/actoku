@@ -70,16 +70,16 @@ function GridPage() {
   return (
     <div className="w-screen h-full min-h-screen flex justify-center items-center  text-white flex-col pr-4">
       <h1 className="w-full text-center  mt-3 text-8xl md:text-9xl">Actoku</h1>
-      <div className="mt-4 flex-shrink-0 flex-grow flex-col items-center justify-center flex">
+      <div className="mt-4 flex flex-row flex-shrink-0 flex-grow justify-center">
         {!cols || !rows ? (
           <LoadingSpinner />
         ) : (
-          <div className="flex-grow flex items-center justify-center ">
-            <div>
-              <div className="grid grid-flow-col grid-auto-max pl-1">
+          <div className="flex flex-grow flex-row items-center justify-center ">
+            <div className="flex flex-row items-center">
+              <div className="grid grid-col-1 grid-row-2 grid-auto-max pl-1">
+              <div className="grid grid-flow-col grid-auto-max">
                 <div className="w-36 sm:w-40 md:w-32 h-full mt-41"></div>
-
-                {cols.map((actorInfo) => (
+              {cols.map((actorInfo) => (
                   <div
                     className="w-12 sm:w-36 md:w-36 px-3 pb-1"
                     key={actorInfo.id}
@@ -93,8 +93,8 @@ function GridPage() {
                     />
                   </div>
                 ))}
-              </div>
-              <div className="flex justify-evenly">
+                </div>
+                <div className="grid grid-flow-col grid-auto-max">
                 <div className="grid grid-column-3">
                   {rows.map((actorInfo) => (
                     <div
@@ -121,6 +121,7 @@ function GridPage() {
                       }}
                     />
                   ))}
+                </div>
                 </div>
                 {/* <div className="sm:w-36 md:w-48 h-full hidden justify-center sm:flex">
                   <GuessBlock />
