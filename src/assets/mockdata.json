@@ -1,0 +1,36 @@
+{
+    "column": [
+        {
+            "name": "Brad Pitt",
+            "id": 287,
+            "imageUrl": "/1k9MVNS9M3Y4KejBHusNdbGJwRw.jpg"
+        },
+        {
+            "name": "Matt Damon",
+            "id": 1892,
+            "imageUrl": "/aCvBXTAR9B1qRjIRzMBYhhbm1fR.jpg"
+        }, 
+        {
+            "name": "Casey Affleck",
+            "id": 1893,
+            "imageUrl": "/vD5MtCjHPHpmU9XNn74EPGMHT7o.jpg"
+        }
+    ],
+    "row": [
+        {
+            "name": "George Clooney",
+            "id": 1461,
+            "imageUrl": "/4s3wI0bqOP7K3hhcmKqV6m3GYiQ.jpg"
+        },
+        {
+            "name": "Julia Roberts",
+            "id": 1204,
+            "imageUrl": "/4XvEI2AgZ7bNOy1z2Nx8LcwLnTM.jpg"
+        }, 
+        {
+            "name": "George Lucas",
+            "id": 1,
+            "imageUrl": "/WCSZzWdtPmdRxH9LUCVi2JPCSJ.jpg"
+        }
+    ]
+}
