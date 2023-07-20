@@ -10,10 +10,18 @@ export default function GuessPanel({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [movieId, setMovieId] = useState("");
+
   const { data: movies, isLoading } = useQuery<{
     results: { id; poster_path }[];
   }>([`search/movie?query=${searchQuery}`], {
     enabled: searchQuery.length > 0,
+  });
+
+  const { data: cast} = useQuery<{
+    cast: { id: number; }[];
+  }>([`movie/${movieId}/credits`], {
+    enabled: movieId.length > 0
   });
 
   const incrementCounter = (() => {
