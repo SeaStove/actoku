@@ -118,7 +118,6 @@ function GridPage() {
                       key={val.toString()}
                       onClick={() => {
                         setGridSelected(val);
-                        setCount((currentCount) => currentCount + 1);
                       }}
                     />
                   ))}
@@ -138,6 +137,7 @@ function GridPage() {
         <GuessPanel
           rowActor={rows[gridSelected[0]]}
           colActor={cols[gridSelected[1]]}
+          setCount={setCount}
           setGridSelected={setGridSelected}
         />
       )}

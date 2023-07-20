@@ -3,16 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "./LoadingSpinner";
 
 export default function GuessPanel({
-  rowActor = {
-    id: 287,
-    imageUrl: "https://image.tmdb.org/t/p/w500/1k9MVNS9M3Y4KejBHusNdbGJwRw.jpg",
-    name: "Brad Pitt",
-  },
-  colActor = {
-    id: 287,
-    imageUrl: "https://image.tmdb.org/t/p/w500/1k9MVNS9M3Y4KejBHusNdbGJwRw.jpg",
-    name: "Matt Damon",
-  },
+  rowActor,
+  colActor,
+  setCount,
   setGridSelected,
 }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,13 +16,20 @@ export default function GuessPanel({
     enabled: searchQuery.length > 0,
   });
 
+  const incrementCounter = (() => {
+    setCount((currentCount) => currentCount + 1);
+  })
+
   const MovieButton = ({ movie }) => {
     const poster_path = movie.poster_path
       ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
       : "https://via.placeholder.com/300x500";
 
     return (
-      <button className="flex items-center justify-start w-full px-2">
+      <button 
+      className="flex items-center justify-start w-full px-2"
+      onClick={incrementCounter}
+      >
         <div className="flex items-center justify-start w-12">
           <img
             src={poster_path}
