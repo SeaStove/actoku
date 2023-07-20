@@ -5,12 +5,12 @@ import LoadingSpinner from "./LoadingSpinner";
 export default function GuessPanel({
   rowActor = {
     id: 287,
-    url: "https://image.tmdb.org/t/p/w500/1k9MVNS9M3Y4KejBHusNdbGJwRw.jpg",
+    imageUrl: "https://image.tmdb.org/t/p/w500/1k9MVNS9M3Y4KejBHusNdbGJwRw.jpg",
     name: "Brad Pitt",
   },
   colActor = {
     id: 287,
-    url: "https://image.tmdb.org/t/p/w500/1k9MVNS9M3Y4KejBHusNdbGJwRw.jpg",
+    imageUrl: "https://image.tmdb.org/t/p/w500/1k9MVNS9M3Y4KejBHusNdbGJwRw.jpg",
     name: "Matt Damon",
   },
   setGridSelected,
