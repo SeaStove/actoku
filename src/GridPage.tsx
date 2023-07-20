@@ -86,9 +86,11 @@ function GridPage() {
                   >
                     <img
                       src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
-                      style={{width: "120px" ,
-                      height: "120px",
-                    objectFit: "cover"}}
+                      style={{
+                        width: "120px",
+                        height: "120px",
+                        objectFit: "cover",
+                      }}
                       alt={actorInfo.name}
                     />
                   </div>
@@ -101,13 +103,15 @@ function GridPage() {
                       className="w-12 sm:w-36 md:w-36 flex justify-evenly items-center px-3 pb-1"
                       key={actorInfo.id}
                     >
-                    <img
-                      src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
-                      style={{width: "120px" ,
-                      height: "120px",
-                    objectFit: "cover"}}
-                      alt={actorInfo.name}
-                    />
+                      <img
+                        src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
+                        style={{
+                          width: "120px",
+                          height: "120px",
+                          objectFit: "cover",
+                        }}
+                        alt={actorInfo.name}
+                      />
                     </div>
                   ))}
                 </div>
