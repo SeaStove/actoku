@@ -31,27 +31,27 @@ function GridPage() {
     [2, 2],
   ];
 
-  function camelCaseToReadable(camelCaseString) {
-    // Split the camelCaseString into words using regular expression
-    const words = camelCaseString.split(/(?=[A-Z])/);
+  // function camelCaseToReadable(camelCaseString) {
+  //   // Split the camelCaseString into words using regular expression
+  //   const words = camelCaseString.split(/(?=[A-Z])/);
 
-    // Capitalize the first letter of each word and join them back
-    const readableString = words
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+  //   // Capitalize the first letter of each word and join them back
+  //   const readableString = words
+  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+  //     .join(" ");
 
-    return readableString;
-  }
+  //   return readableString;
+  // }
 
-  const currentDate = useMemo(() => {
-    // Function to get the current date in 'YYYY-MM-DD' format
+  // const currentDate = useMemo(() => {
+  //   // Function to get the current date in 'YYYY-MM-DD' format
 
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }, []);
+  //   const today = new Date();
+  //   const year = today.getFullYear();
+  //   const month = String(today.getMonth() + 1).padStart(2, "0");
+  //   const day = String(today.getDate()).padStart(2, "0");
+  //   return `${year}-${month}-${day}`;
+  // }, []);
 
   useEffect(() => {
     setRows(mockdata.row as ActorData[]);
@@ -130,7 +130,8 @@ function GridPage() {
       </div>
       {gridSelected && rows && cols && (
         <GuessPanel
-          gridSelected={gridSelected}
+          rowActor={rows[gridSelected[0]]}
+          colActor={cols[gridSelected[1]]}
           setGridSelected={setGridSelected}
         />
       )}

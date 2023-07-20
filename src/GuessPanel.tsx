@@ -17,12 +17,11 @@ export default function GuessPanel({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: movies, isLoading } = useQuery<{ results: {}[] }>(
-    [`search/movie?query=${searchQuery}`],
-    {
-      enabled: searchQuery.length > 0,
-    }
-  );
+  const { data: movies, isLoading } = useQuery<{
+    results: { id; poster_path }[];
+  }>([`search/movie?query=${searchQuery}`], {
+    enabled: searchQuery.length > 0,
+  });
 
   const MovieButton = ({ movie }) => {
     const poster_path = movie.poster_path
@@ -80,7 +79,7 @@ export default function GuessPanel({
           )}
           {movies?.results && (
             <div>
-              {movies.results.slice(0, 5).map((movie, index) => (
+              {movies.results.slice(0, 5).map((movie) => (
                 <MovieButton movie={movie} key={movie.id} />
               ))}
             </div>
