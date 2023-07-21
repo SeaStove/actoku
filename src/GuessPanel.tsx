@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "./LoadingSpinner";
+import './GuessPanel.css'
 
 export default function GuessPanel({
   rowActor,
@@ -10,6 +11,8 @@ export default function GuessPanel({
   setSquares,
   gridSelected,
   setGridSelected,
+  correctAnswers,
+  setCorrectAnswers
 }) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -18,6 +21,8 @@ export default function GuessPanel({
   const [inMovie, setInMovie] = useState<boolean | null>();
 
   const [selectedMovie, setSelectedMovie] = useState();
+
+
 
   const { data: movies, isLoading } = useQuery<{
     results: { id; poster_path }[];
@@ -54,6 +59,7 @@ export default function GuessPanel({
     if (test.length === 2) {
       setInMovie(true);
       squares[gridSelected].poster = movie.poster_path;
+      setCorrectAnswers(correctAnswers => [...correctAnswers, movie.id]);
       setSquares([...squares]);
     } else {
       setInMovie(false);
@@ -67,7 +73,8 @@ export default function GuessPanel({
 
     return (
       <button
-        className="flex items-center justify-start w-full px-2"
+        disabled={correctAnswers.includes(movie.id)}
+        className={"flex items-center justify-start w-full px-2" + " " + (correctAnswers.includes(movie.id) ? "previouslySelected" : "")}
         onClick={() => onClickMovieSelect(movie)}
       >
               <div className="flex items-center justify-start w-12">

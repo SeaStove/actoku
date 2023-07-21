@@ -1,0 +1,8 @@
+.previouslySelected{
+    color: #B8B7B8;
+}
+
+button:disabled:hover,
+button[disabled]:hover {
+    border-color: rgba(26, 26, 26, 1);
+}
