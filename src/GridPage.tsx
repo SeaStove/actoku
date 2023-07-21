@@ -111,18 +111,23 @@ function GridPage() {
                   <div className="rounded-xl  dark:border-gray-950 grid grid-cols-3 grid-rows-3 overflow-hidden gap-1">
                     {squares.map((val, index) => (
                       <button
-                        className="border-r border-b hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-center w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48 transition-colors duration-75 overflow-hidden dark:border-gray-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#59d185] focus-visible:z-50"
+                        className="border-r border-b hover:bg-gray-100 dark:hover:bg-gray-700 p-0 cursor-pointer flex items-center justify-center w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48 transition-colors duration-75 overflow-hidden dark:border-gray-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#59d185] focus-visible:z-50"
                         key={val.gridSelection.toString()}
                         onClick={() => {
                           setGridSelected(index);
                         }}
                       >
                       {val?.poster && (
-                          <img
-                          src={`https://image.tmdb.org/t/p/w500${val.poster}`}
-                          className="w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48  object-cover rounded-lg mr-1"
-                          alt=""
-                        />
+                        <div className="relative">
+                            <img
+                            src={`https://image.tmdb.org/t/p/w500${val.poster}`}
+                            className="image w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48  object-cover rounded-lg mr-1"
+                            alt=""
+                          />
+                          <div className="opacity-0 hover:opacity-100 whitespace-pre opacity-100 duration-300 absolute inset-0 z-1 flex justify-center items-end bg-gradient-to-t from-green-500 from-5% to-50% text-base text-white font-semibold break-words">
+                            {"Ocean's Eleven \n25%"}
+                          </div>
+                        </div>
                         )}
                     </button>
                   ))}
