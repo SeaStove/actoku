@@ -89,7 +89,7 @@ export default function GuessPanel({
       <button
         disabled={correctAnswers.includes(movie.id)}
         className={"flex items-center justify-start w-full px-2" + " " + (correctAnswers.includes(movie.id) ? "previouslySelected" : "")}
-        onClick={() => onClickMovieSelect(movie)}
+        onClick={() => onMovieSelect(movie)}
       >
               <div className="flex items-center justify-start w-12">
           <img
