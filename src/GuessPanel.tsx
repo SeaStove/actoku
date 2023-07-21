@@ -31,7 +31,7 @@ export default function GuessPanel({
     enabled: movieId.length > 0,
   });
 
-  const onClickMovieSelect = (movie) => {
+  const onMovieSelect = (movie) => {
     setSelectedMovie(movie);
     setMovieId(`${movie.id}`);
     incrementCounter();
@@ -68,7 +68,7 @@ export default function GuessPanel({
     return (
       <button
         className="flex items-center justify-start w-full px-2"
-        onClick={() => onClickMovieSelect(movie)}
+        onClick={() => onMovieSelect(movie)}
       >
               <div className="flex items-center justify-start w-12">
           <img
@@ -110,6 +110,7 @@ export default function GuessPanel({
               onChange={(e) => {
                 setSearchQuery(e.target.value);
               }}
+              onKeyDown={(e) => (e.key === 'Enter' && movies.results.length > 0) ? onMovieSelect(movies?.results?.[0]) : ''}
             />
           </div>
           {searchQuery.length > 0 && isLoading && (
