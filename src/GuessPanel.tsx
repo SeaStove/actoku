@@ -22,7 +22,7 @@ export default function GuessPanel({
 
   const [selectedMovie, setSelectedMovie] = useState();
 
-
+  const [excluded, setExcluded] = useState<string[]>([]);
 
   const { data: movies, isLoading } = useQuery<{
     results: { id; poster_path }[];
@@ -36,7 +36,7 @@ export default function GuessPanel({
     enabled: movieId.length > 0,
   });
 
-  const onClickMovieSelect = (movie) => {
+  const onMovieSelect = (movie) => {
     setSelectedMovie(movie);
     setMovieId(`${movie.id}`);
     incrementCounter();
@@ -53,6 +53,7 @@ export default function GuessPanel({
   };
 
   const checkIfActorsInMovie = (somethingBesidesCast, movie) => {
+    let notInMovie: string[] = [];
     const test = somethingBesidesCast.cast.filter(
       (actor) => actor?.id === colActor.id || actor?.id === rowActor.id
     );
@@ -62,6 +63,19 @@ export default function GuessPanel({
       setCorrectAnswers(correctAnswers => [...correctAnswers, movie.id]);
       setSquares([...squares]);
     } else {
+      if(test.length > 0){
+        test.forEach((i) => {
+          if(i.id === rowActor.id){
+            notInMovie.push(colActor.name)
+          } else {
+            notInMovie.push(rowActor.name)
+          }
+        })
+      } else {
+        notInMovie.push(rowActor.name)
+        notInMovie.push(colActor.name)
+      }
+      setExcluded([...notInMovie])
       setInMovie(false);
     }
   };
@@ -117,6 +131,7 @@ export default function GuessPanel({
               onChange={(e) => {
                 setSearchQuery(e.target.value);
               }}
+              onKeyDown={(e) => (e.key === 'Enter' && movies.results.length > 0) ? onMovieSelect(movies?.results?.[0]) : ''}
             />
           </div>
           {searchQuery.length > 0 && isLoading && (
@@ -133,12 +148,12 @@ export default function GuessPanel({
           )}
           {inMovie && (
             <div className="text-center text-2xl text-green-500  flex justify-center items-center mt-4">
-              {rowActor.name} and {colActor.name} was in it
+              {rowActor.name} and {colActor.name} were in it
             </div>
           )}
           {inMovie === false && (
             <div className="text-center text-2xl text-red-500 flex justify-center items-center mt-4">
-              {rowActor.name} and {colActor.name} were not in it
+              {excluded.length > 1 ? `${rowActor.name} and ${colActor.name} were not in it` : `${excluded[0]} was not in it`}
             </div>
           )}
         </div>
