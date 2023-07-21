@@ -72,55 +72,39 @@ function GridPage() {
       <h1 className="w-full text-center md:text-left p-4 text-8xl md:text-3xl">
         Actoku
       </h1>
-      <div className="mt-4 flex flex-row flex-shrink-0 flex-grow justify-center">
+      <div className="mt-4 flex flex-row flex-shrink-0 flex-grow justify-center pr-4 mr:pr-0">
         {!cols || !rows ? (
           <LoadingSpinner />
         ) : (
-          <div className="flex flex-grow flex-row items-center justify-center ">
+          <div className="flex flex-grow flex-col items-center justify-center ">
             <div className="flex flex-row items-center">
               <div className="grid grid-col-1 grid-row-2 grid-auto-max pl-1">
                 <div className="grid grid-flow-col grid-auto-max">
-                  <div className="w-36 sm:w-40 md:w-32 h-full mt-41"></div>
+                  <div className="w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48 object-cover rounded-lg mb-1 gap-1"></div>
                   {cols.map((actorInfo) => (
-                    <div
-                      className="w-12 sm:w-36 md:w-36 px-3 pb-1"
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
+                      className="w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48 object-cover rounded-lg"
+                      alt={actorInfo.name}
                       key={actorInfo.id}
-                    >
-                      <img
-                        src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
-                        style={{
-                          width: "120px",
-                          height: "120px",
-                          objectFit: "cover",
-                        }}
-                        alt={actorInfo.name}
-                      />
-                    </div>
+                    />
                   ))}
                 </div>
                 <div className="grid grid-flow-col grid-auto-max">
-                  <div className="grid grid-column-3">
+                  <div className="grid grid-column-3 gap-1">
                     {rows.map((actorInfo) => (
-                      <div
-                        className="w-12 sm:w-36 md:w-36 flex justify-evenly items-center px-3 pb-1"
+                      <img
+                        src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
+                        className="w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48  object-cover rounded-lg mr-1"
+                        alt={actorInfo.name}
                         key={actorInfo.id}
-                      >
-                        <img
-                          src={`https://image.tmdb.org/t/p/w500${actorInfo.imageUrl}`}
-                          style={{
-                            width: "120px",
-                            height: "120px",
-                            objectFit: "cover",
-                          }}
-                          alt={actorInfo.name}
-                        />
-                      </div>
+                      />
                     ))}
                   </div>
                   <div className="rounded-xl  dark:border-gray-950 grid grid-cols-3 grid-rows-3 overflow-hidden gap-1">
                     {squares.map((val) => (
                       <button
-                        className="border-r border-b hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-center w-24 sm:w-36 md:w-48 h-24 sm:h-36 md:h-48 transition-colors duration-75 overflow-hidden dark:border-gray-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#59d185] focus-visible:z-50"
+                        className="border-r border-b hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-center w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48 transition-colors duration-75 overflow-hidden dark:border-gray-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#59d185] focus-visible:z-50"
                         key={val.toString()}
                         onClick={() => {
                           setGridSelected(val);
@@ -129,13 +113,13 @@ function GridPage() {
                     ))}
                   </div>
                 </div>
-                {/* <div className="sm:w-36 md:w-48 h-full hidden justify-center sm:flex">
-                  <GuessBlock />
-                </div> */}
               </div>
-              <div className="sm:w-36 md:w-48 h-full mt-4 flex justify-center">
+              <div className="sm:w-36 md:w-48 h-full mt-4 hidden sm:flex justify-center items-center">
                 <GuessBlock />
               </div>
+            </div>
+            <div className="sm:hidden w-full mt-4 flex justify-center">
+              <GuessBlock />
             </div>
           </div>
         )}
@@ -148,7 +132,7 @@ function GridPage() {
           setGridSelected={setGridSelected}
         />
       )}
-      <div className="text-gray-500 sm:block mt-4 mb-2 flex justify-center items-center">
+      <div className="text-gray-500 mt-4 mb-2 hidden sm:flex flex-col justify-center items-center text-center">
         <p>
           This game was made by{" "}
           <a href="https://github.com/ChaseGHMU" target="_blank">
