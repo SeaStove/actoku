@@ -6,15 +6,15 @@ import "./GuessPanel.css";
 export default function GuessPanel({
   rowActor,
   colActor,
-  setCount,
   setSquares,
   gridSelected,
   setGridSelected,
-  correctAnswers,
-  setCorrectAnswers,
+  // setCorrectAnswers,
   setCorrectAnswer,
   setIncorrectAnswer,
-  setGuesses,
+  incorrectAnswers,
+  correctAnswers,
+  incrementGuesses,
 }) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -43,7 +43,7 @@ export default function GuessPanel({
   const onMovieSelect = (movie) => {
     setSelectedMovie(movie);
     setMovieId(`${movie.id}`);
-    incrementCounter();
+    incrementGuesses();
   };
 
   useEffect(() => {
@@ -52,10 +52,6 @@ export default function GuessPanel({
     }
   }, [cast]);
 
-  const incrementCounter = () => {
-    setCount((currentCount) => currentCount + 1);
-  };
-
   const checkIfActorsInMovie = (cast, movie) => {
     let notInMovie: string[] = [];
     const actorsInMovie = cast.filter(
@@ -63,13 +59,10 @@ export default function GuessPanel({
     );
     if (actorsInMovie.length === 2) {
       setInMovie(true);
-      setCorrectAnswers((correctAnswers) => [...correctAnswers, movie.id]);
-      setSquares((squares) => {
-        squares[gridSelected].poster = movie.poster_path;
-        return squares;
-      });
+      setCorrectAnswer(movie, gridSelected);
       setGridSelected(-1);
     } else {
+      setIncorrectAnswer(movie.id, gridSelected);
       if (actorsInMovie.length > 0) {
         actorsInMovie.forEach((i) => {
           if (i.id === rowActor.id) {

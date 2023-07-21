@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect, useReducer, useMemo } from "react";
 import GuessPanel from "./GuessPanel";
 import mockdata from "./assets/mockdata.json";
 import LoadingSpinner from "./LoadingSpinner";
@@ -12,11 +12,8 @@ function GridPage() {
 
   interface Squares {
     gridSelection: number[];
-    poster: string | null;
   }
 
-  // Number of guesses
-  const [count, setCount] = useState(0);
   // Row Actor IDs
   const [rows, setRows] = useState<ActorData[]>();
   // Column Actor IDs
@@ -25,53 +22,60 @@ function GridPage() {
   const [gridSelected, setGridSelected] = useState<number | null>();
   const [squares, setSquares] = useState<Squares[]>([
     // [row, col]
-    { gridSelection: [0, 0], poster: null },
-    { gridSelection: [0, 1], poster: null },
-    { gridSelection: [0, 2], poster: null },
-    { gridSelection: [1, 0], poster: null },
-    { gridSelection: [1, 1], poster: null },
-    { gridSelection: [1, 2], poster: null },
-    { gridSelection: [2, 0], poster: null },
-    { gridSelection: [2, 1], poster: null },
-    { gridSelection: [2, 2], poster: null },
+    { gridSelection: [0, 0] },
+    { gridSelection: [0, 1] },
+    { gridSelection: [0, 2] },
+    { gridSelection: [1, 0] },
+    { gridSelection: [1, 1] },
+    { gridSelection: [1, 2] },
+    { gridSelection: [2, 0] },
+    { gridSelection: [2, 1] },
+    { gridSelection: [2, 2] },
   ]);
 
-  const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
+  // const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
+  const currentDate = useMemo(() => {
+    // Function to get the current date in 'YYYY-MM-DD' format
 
-  const initialState = {
-    correctAnswers: [
-      [null, null, null],
-      [null, null, null],
-      [null, null, null],
-    ],
-    incorrectAnswers: [
-      [[], [], []],
-      [[], [], []],
-      [[], [], []],
-    ],
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }, []);
+
+  const initialState = JSON.parse(localStorage.getItem("state") ?? "{}")?.[
+    currentDate
+  ] ?? {
+    correctAnswers: [null, null, null, null, null, null, null, null, null],
+    incorrectAnswers: [[], [], [], [], [], [], [], [], []],
     guesses: 0,
   };
 
   const SET_CORRECT_ANSWER = "SET_CORRECT_ANSWER";
   const SET_INCORRECT_ANSWER = "SET_INCORRECT_ANSWER";
-  const SET_GUESSES = "SET_GUESSES";
+  const INCRIMENT_GUESSES = "INCRIMENT_GUESSES";
 
   // Reducer function
   const reducer = (state, action) => {
-    const { row, col, value } = action.payload;
+    const { value, gridSelected } = action.payload ?? {};
     switch (action.type) {
       case SET_CORRECT_ANSWER:
+        const { id, poster_path } = value;
         const updatedCorrectAnswers = [...state.correctAnswers];
-        updatedCorrectAnswers[row][col] = value;
+        updatedCorrectAnswers[gridSelected] = { id, poster: poster_path };
         return { ...state, correctAnswers: updatedCorrectAnswers };
 
       case SET_INCORRECT_ANSWER:
         const updatedIncorrectAnswers = [...state.incorrectAnswers];
-        updatedIncorrectAnswers[row][col] = value;
+        updatedIncorrectAnswers[gridSelected] = [
+          ...updatedIncorrectAnswers[gridSelected],
+          value,
+        ];
         return { ...state, incorrectAnswers: updatedIncorrectAnswers };
 
-      case SET_GUESSES:
-        return { ...state, guesses: action.payload };
+      case INCRIMENT_GUESSES:
+        return { ...state, guesses: state.guesses + 1 };
 
       default:
         return state;
@@ -79,18 +83,19 @@ function GridPage() {
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { correctAnswers, incorrectAnswers, guesses } = state;
 
   // Helper functions to dispatch actions
-  const setCorrectAnswer = (row, col, value) => {
-    dispatch({ type: SET_CORRECT_ANSWER, payload: { row, col, value } });
+  const setCorrectAnswer = (value, gridSelected) => {
+    dispatch({ type: SET_CORRECT_ANSWER, payload: { value, gridSelected } });
   };
 
-  const setIncorrectAnswer = (row, col, value) => {
-    dispatch({ type: SET_INCORRECT_ANSWER, payload: { row, col, value } });
+  const setIncorrectAnswer = (value, gridSelected) => {
+    dispatch({ type: SET_INCORRECT_ANSWER, payload: { value, gridSelected } });
   };
 
-  const setGuesses = (guesses) => {
-    dispatch({ type: SET_GUESSES, payload: guesses });
+  const incrementGuesses = () => {
+    dispatch({ type: INCRIMENT_GUESSES });
   };
 
   // function camelCaseToReadable(camelCaseString) {
@@ -105,27 +110,28 @@ function GridPage() {
   //   return readableString;
   // }
 
-  // const currentDate = useMemo(() => {
-  //   // Function to get the current date in 'YYYY-MM-DD' format
-
-  //   const today = new Date();
-  //   const year = today.getFullYear();
-  //   const month = String(today.getMonth() + 1).padStart(2, "0");
-  //   const day = String(today.getDate()).padStart(2, "0");
-  //   return `${year}-${month}-${day}`;
-  // }, []);
+  const guessHistory = useMemo(() => {
+    return JSON.parse(localStorage.getItem("state") ?? "{}");
+  }, []);
 
   useEffect(() => {
     setRows(mockdata.row as ActorData[]);
     setCols(mockdata.column as ActorData[]);
   }, []);
 
+  useEffect(() => {
+    if (state) {
+      const updatedState = { ...guessHistory, [currentDate]: { ...state } };
+      localStorage.setItem("state", JSON.stringify(updatedState));
+    }
+  }, [state]);
+
   const GuessBlock = () => (
     <div>
       <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase text-center">
         Total Guesses
       </div>
-      <div className="text-center text-7xl font-semibold">{count}</div>
+      <div className="text-center text-7xl font-semibold">{guesses}</div>
     </div>
   );
 
@@ -172,10 +178,10 @@ function GridPage() {
                           setGridSelected(index);
                         }}
                       >
-                        {val?.poster && (
+                        {correctAnswers?.[index]?.poster && (
                           <div className="relative">
                             <img
-                              src={`https://image.tmdb.org/t/p/w500${val.poster}`}
+                              src={`https://image.tmdb.org/t/p/w500${correctAnswers?.[index]?.poster}`}
                               className="image w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48  object-cover rounded-lg mr-1"
                               alt=""
                             />
@@ -204,14 +210,13 @@ function GridPage() {
           rowActor={rows[squares[gridSelected].gridSelection[0]]}
           colActor={cols[squares[gridSelected].gridSelection[1]]}
           setSquares={setSquares}
-          setCount={setCount}
           gridSelected={gridSelected}
           setGridSelected={setGridSelected}
           correctAnswers={correctAnswers}
-          setCorrectAnswers={setCorrectAnswers}
+          incorrectAnswers={incorrectAnswers}
           setIncorrectAnswer={setIncorrectAnswer}
           setCorrectAnswer={setCorrectAnswer}
-          setGuesses={setGuesses}
+          incrementGuesses={incrementGuesses}
         />
       )}
       <div className="text-gray-500 mt-4 mb-2 hidden sm:flex flex-col justify-center items-center text-center">
