@@ -35,6 +35,8 @@ function GridPage() {
     {gridSelection: [2, 1], poster: null},
     {gridSelection: [2, 2], poster: null},
   ]);
+  
+  const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
 
   // function camelCaseToReadable(camelCaseString) {
   //   // Split the camelCaseString into words using regular expression
@@ -146,6 +148,8 @@ function GridPage() {
           setCount={setCount}
           gridSelected={gridSelected}
           setGridSelected={setGridSelected}
+          correctAnswers={correctAnswers}
+          setCorrectAnswers={setCorrectAnswers}
         />
       )}
       <div className="text-gray-500 mt-4 mb-2 hidden sm:flex flex-col justify-center items-center text-center">
