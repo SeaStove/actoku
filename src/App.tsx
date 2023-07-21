@@ -2,17 +2,13 @@ import axios from "axios";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import GridPage from "./GridPage";
 
-const baseUrl = "https://api.themoviedb.org/3";
+const baseUrl = "https://actoku-backend.onrender.com/api/";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       queryFn: async ({ queryKey: [url] }) => {
-        const { data } = await axios.get(`${baseUrl}/${url}`, {
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
-          },
-        });
+        const { data } = await axios.get(`${baseUrl}${url}`);
         return data;
       },
     },

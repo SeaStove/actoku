@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "./LoadingSpinner";
-import './GuessPanel.css'
+import "./GuessPanel.css";
 
 export default function GuessPanel({
   rowActor,
   colActor,
   setCount,
-  squares,
   setSquares,
   gridSelected,
   setGridSelected,
   correctAnswers,
-  setCorrectAnswers
+  setCorrectAnswers,
+  setCorrectAnswer,
+  setIncorrectAnswer,
+  setGuesses,
 }) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -30,11 +32,13 @@ export default function GuessPanel({
     enabled: searchQuery.length > 0,
   });
 
-  const { data: cast } = useQuery<{
+  const { data: credits } = useQuery<{
     cast: { id }[];
   }>([`movie/${movieId}/credits`], {
     enabled: movieId.length > 0,
   });
+
+  const cast = credits?.cast;
 
   const onMovieSelect = (movie) => {
     setSelectedMovie(movie);
@@ -52,30 +56,33 @@ export default function GuessPanel({
     setCount((currentCount) => currentCount + 1);
   };
 
-  const checkIfActorsInMovie = (somethingBesidesCast, movie) => {
+  const checkIfActorsInMovie = (cast, movie) => {
     let notInMovie: string[] = [];
-    const test = somethingBesidesCast.cast.filter(
+    const actorsInMovie = cast.filter(
       (actor) => actor?.id === colActor.id || actor?.id === rowActor.id
     );
-    if (test.length === 2) {
+    if (actorsInMovie.length === 2) {
       setInMovie(true);
-      squares[gridSelected].poster = movie.poster_path;
-      setCorrectAnswers(correctAnswers => [...correctAnswers, movie.id]);
-      setSquares([...squares]);
+      setCorrectAnswers((correctAnswers) => [...correctAnswers, movie.id]);
+      setSquares((squares) => {
+        squares[gridSelected].poster = movie.poster_path;
+        return squares;
+      });
+      setGridSelected(-1);
     } else {
-      if(test.length > 0){
-        test.forEach((i) => {
-          if(i.id === rowActor.id){
-            notInMovie.push(colActor.name)
+      if (actorsInMovie.length > 0) {
+        actorsInMovie.forEach((i) => {
+          if (i.id === rowActor.id) {
+            notInMovie.push(colActor.name);
           } else {
-            notInMovie.push(rowActor.name)
+            notInMovie.push(rowActor.name);
           }
-        })
+        });
       } else {
-        notInMovie.push(rowActor.name)
-        notInMovie.push(colActor.name)
+        notInMovie.push(rowActor.name);
+        notInMovie.push(colActor.name);
       }
-      setExcluded([...notInMovie])
+      setExcluded([...notInMovie]);
       setInMovie(false);
     }
   };
@@ -88,10 +95,14 @@ export default function GuessPanel({
     return (
       <button
         disabled={correctAnswers.includes(movie.id)}
-        className={"flex items-center justify-start w-full px-2" + " " + (correctAnswers.includes(movie.id) ? "previouslySelected" : "")}
+        className={
+          "flex items-center justify-start w-full px-2" +
+          " " +
+          (correctAnswers.includes(movie.id) ? "previouslySelected" : "")
+        }
         onClick={() => onMovieSelect(movie)}
       >
-              <div className="flex items-center justify-start w-12">
+        <div className="flex items-center justify-start w-12">
           <img
             src={poster_path}
             alt={movie.title}
@@ -131,7 +142,11 @@ export default function GuessPanel({
               onChange={(e) => {
                 setSearchQuery(e.target.value);
               }}
-              onKeyDown={(e) => (e.key === 'Enter' && movies.results.length > 0) ? onMovieSelect(movies?.results?.[0]) : ''}
+              onKeyDown={(e) =>
+                e.key === "Enter" && movies.results.length > 0
+                  ? onMovieSelect(movies?.results?.[0])
+                  : ""
+              }
             />
           </div>
           {searchQuery.length > 0 && isLoading && (
@@ -153,7 +168,9 @@ export default function GuessPanel({
           )}
           {inMovie === false && (
             <div className="text-center text-2xl text-red-500 flex justify-center items-center mt-4">
-              {excluded.length > 1 ? `${rowActor.name} and ${colActor.name} were not in it` : `${excluded[0]} was not in it`}
+              {excluded.length > 1
+                ? `${rowActor.name} and ${colActor.name} were not in it`
+                : `${excluded[0]} was not in it`}
             </div>
           )}
         </div>

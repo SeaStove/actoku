@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import GuessPanel from "./GuessPanel";
 import mockdata from "./assets/mockdata.json";
 import LoadingSpinner from "./LoadingSpinner";
@@ -25,18 +25,73 @@ function GridPage() {
   const [gridSelected, setGridSelected] = useState<number | null>();
   const [squares, setSquares] = useState<Squares[]>([
     // [row, col]
-    {gridSelection: [0, 0], poster: null},
-    {gridSelection: [0, 1], poster: null},
-    {gridSelection: [0, 2], poster: null},
-    {gridSelection: [1, 0], poster: null},
-    {gridSelection: [1, 1], poster: null},
-    {gridSelection: [1, 2], poster: null},
-    {gridSelection: [2, 0], poster: null},
-    {gridSelection: [2, 1], poster: null},
-    {gridSelection: [2, 2], poster: null},
+    { gridSelection: [0, 0], poster: null },
+    { gridSelection: [0, 1], poster: null },
+    { gridSelection: [0, 2], poster: null },
+    { gridSelection: [1, 0], poster: null },
+    { gridSelection: [1, 1], poster: null },
+    { gridSelection: [1, 2], poster: null },
+    { gridSelection: [2, 0], poster: null },
+    { gridSelection: [2, 1], poster: null },
+    { gridSelection: [2, 2], poster: null },
   ]);
-  
+
   const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
+
+  const initialState = {
+    correctAnswers: [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null],
+    ],
+    incorrectAnswers: [
+      [[], [], []],
+      [[], [], []],
+      [[], [], []],
+    ],
+    guesses: 0,
+  };
+
+  const SET_CORRECT_ANSWER = "SET_CORRECT_ANSWER";
+  const SET_INCORRECT_ANSWER = "SET_INCORRECT_ANSWER";
+  const SET_GUESSES = "SET_GUESSES";
+
+  // Reducer function
+  const reducer = (state, action) => {
+    const { row, col, value } = action.payload;
+    switch (action.type) {
+      case SET_CORRECT_ANSWER:
+        const updatedCorrectAnswers = [...state.correctAnswers];
+        updatedCorrectAnswers[row][col] = value;
+        return { ...state, correctAnswers: updatedCorrectAnswers };
+
+      case SET_INCORRECT_ANSWER:
+        const updatedIncorrectAnswers = [...state.incorrectAnswers];
+        updatedIncorrectAnswers[row][col] = value;
+        return { ...state, incorrectAnswers: updatedIncorrectAnswers };
+
+      case SET_GUESSES:
+        return { ...state, guesses: action.payload };
+
+      default:
+        return state;
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  // Helper functions to dispatch actions
+  const setCorrectAnswer = (row, col, value) => {
+    dispatch({ type: SET_CORRECT_ANSWER, payload: { row, col, value } });
+  };
+
+  const setIncorrectAnswer = (row, col, value) => {
+    dispatch({ type: SET_INCORRECT_ANSWER, payload: { row, col, value } });
+  };
+
+  const setGuesses = (guesses) => {
+    dispatch({ type: SET_GUESSES, payload: guesses });
+  };
 
   // function camelCaseToReadable(camelCaseString) {
   //   // Split the camelCaseString into words using regular expression
@@ -117,20 +172,20 @@ function GridPage() {
                           setGridSelected(index);
                         }}
                       >
-                      {val?.poster && (
-                        <div className="relative">
+                        {val?.poster && (
+                          <div className="relative">
                             <img
-                            src={`https://image.tmdb.org/t/p/w500${val.poster}`}
-                            className="image w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48  object-cover rounded-lg mr-1"
-                            alt=""
-                          />
-                          <div className="opacity-0 hover:opacity-100 whitespace-pre opacity-100 duration-300 absolute inset-0 z-1 flex justify-center items-end bg-gradient-to-t from-green-500 from-5% to-50% text-base text-white font-semibold break-words">
-                            {"Ocean's Eleven \n25%"}
+                              src={`https://image.tmdb.org/t/p/w500${val.poster}`}
+                              className="image w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48  object-cover rounded-lg mr-1"
+                              alt=""
+                            />
+                            <div className="opacity-0 hover:opacity-100 whitespace-pre opacity-100 duration-300 absolute inset-0 z-1 flex justify-center items-end bg-gradient-to-t from-green-500 from-5% to-50% text-base text-white font-semibold break-words">
+                              {"Ocean's Eleven \n25%"}
+                            </div>
                           </div>
-                        </div>
                         )}
-                    </button>
-                  ))}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -148,13 +203,15 @@ function GridPage() {
         <GuessPanel
           rowActor={rows[squares[gridSelected].gridSelection[0]]}
           colActor={cols[squares[gridSelected].gridSelection[1]]}
-          squares={squares}
           setSquares={setSquares}
           setCount={setCount}
           gridSelected={gridSelected}
           setGridSelected={setGridSelected}
           correctAnswers={correctAnswers}
           setCorrectAnswers={setCorrectAnswers}
+          setIncorrectAnswer={setIncorrectAnswer}
+          setCorrectAnswer={setCorrectAnswer}
+          setGuesses={setGuesses}
         />
       )}
       <div className="text-gray-500 mt-4 mb-2 hidden sm:flex flex-col justify-center items-center text-center">
