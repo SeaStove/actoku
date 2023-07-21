@@ -6,6 +6,9 @@ export default function GuessPanel({
   rowActor,
   colActor,
   setCount,
+  squares,
+  setSquares,
+  gridSelected,
   setGridSelected,
 }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,40 +17,48 @@ export default function GuessPanel({
 
   const [inMovie, setInMovie] = useState<boolean | null>();
 
+  const [selectedMovie, setSelectedMovie] = useState();
+
   const { data: movies, isLoading } = useQuery<{
     results: { id; poster_path }[];
   }>([`search/movie?query=${searchQuery}`], {
     enabled: searchQuery.length > 0,
   });
 
-  const { data: cast} = useQuery<{
-    cast: { id; }[];
+  const { data: cast } = useQuery<{
+    cast: { id }[];
   }>([`movie/${movieId}/credits`], {
-    enabled: movieId.length > 0
+    enabled: movieId.length > 0,
   });
 
-  const onClickMovieSelect = ((movie) => {
-    setMovieId(`${movie.id}`)
-    incrementCounter()
-  })
+  const onClickMovieSelect = (movie) => {
+    setSelectedMovie(movie);
+    setMovieId(`${movie.id}`);
+    incrementCounter();
+  };
 
   useEffect(() => {
     if (cast) {
-    checkIfActorsInMovie(cast)
+      checkIfActorsInMovie(cast, selectedMovie);
     }
-  }, [cast])
+  }, [cast]);
 
-  const incrementCounter = (() => {
+  const incrementCounter = () => {
     setCount((currentCount) => currentCount + 1);
-  })
+  };
 
-  const checkIfActorsInMovie = ((somethingBesidesCast) => {
-    console.log(somethingBesidesCast.cast)
-    console.log(colActor.name + colActor.id)
-    const test = somethingBesidesCast.cast.filter((actor) => actor?.id === colActor.id || actor?.id === rowActor.id)
-    console.log(test)
-    setInMovie(test.length === 2)
-  })
+  const checkIfActorsInMovie = (somethingBesidesCast, movie) => {
+    const test = somethingBesidesCast.cast.filter(
+      (actor) => actor?.id === colActor.id || actor?.id === rowActor.id
+    );
+    if (test.length === 2) {
+      setInMovie(true);
+      squares[gridSelected].poster = movie.poster_path;
+      setSquares([...squares]);
+    } else {
+      setInMovie(false);
+    }
+  };
 
   const MovieButton = ({ movie }) => {
     const poster_path = movie.poster_path
@@ -55,11 +66,11 @@ export default function GuessPanel({
       : "https://via.placeholder.com/300x500";
 
     return (
-      <button 
-      className="flex items-center justify-start w-full px-2"
-      onClick={() => onClickMovieSelect(movie)}
+      <button
+        className="flex items-center justify-start w-full px-2"
+        onClick={() => onClickMovieSelect(movie)}
       >
-        <div className="flex items-center justify-start w-12">
+              <div className="flex items-center justify-start w-12">
           <img
             src={poster_path}
             alt={movie.title}
@@ -75,7 +86,7 @@ export default function GuessPanel({
     <div
       className="fixed inset-0 bg-gray-300 dark:bg-slate-600 dark:bg-opacity-50 bg-opacity-50 overflow-y-auto h-full w-full p-2"
       onClick={() => {
-        setGridSelected(null);
+        setGridSelected(-1);
       }}
     >
       <div
@@ -114,13 +125,13 @@ export default function GuessPanel({
             </div>
           )}
           {inMovie && (
-            <div className="text-center text-2xl text-green-500  flex justify-center items-center mt-4"> 
-            {rowActor.name} and {colActor.name} was in it
+            <div className="text-center text-2xl text-green-500  flex justify-center items-center mt-4">
+              {rowActor.name} and {colActor.name} was in it
             </div>
           )}
           {inMovie === false && (
             <div className="text-center text-2xl text-red-500 flex justify-center items-center mt-4">
-               {rowActor.name} and {colActor.name} were not in it
+              {rowActor.name} and {colActor.name} were not in it
             </div>
           )}
         </div>

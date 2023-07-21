@@ -10,6 +10,11 @@ function GridPage() {
     imageUrl: string;
   }
 
+  interface Squares {
+    gridSelection: number[];
+    poster: string | null;
+  }
+
   // Number of guesses
   const [count, setCount] = useState(0);
   // Row Actor IDs
@@ -17,19 +22,19 @@ function GridPage() {
   // Column Actor IDs
   const [cols, setCols] = useState<ActorData[]>();
   // A tuple of [row, col] that is selected
-  const [gridSelected, setGridSelected] = useState<number[] | null>();
-  const squares = [
+  const [gridSelected, setGridSelected] = useState<number | null>();
+  const [squares, setSquares] = useState<Squares[]>([
     // [row, col]
-    [0, 0],
-    [0, 1],
-    [0, 2],
-    [1, 0],
-    [1, 1],
-    [1, 2],
-    [2, 0],
-    [2, 1],
-    [2, 2],
-  ];
+    {gridSelection: [0, 0], poster: null},
+    {gridSelection: [0, 1], poster: null},
+    {gridSelection: [0, 2], poster: null},
+    {gridSelection: [1, 0], poster: null},
+    {gridSelection: [1, 1], poster: null},
+    {gridSelection: [1, 2], poster: null},
+    {gridSelection: [2, 0], poster: null},
+    {gridSelection: [2, 1], poster: null},
+    {gridSelection: [2, 2], poster: null},
+  ]);
 
   // function camelCaseToReadable(camelCaseString) {
   //   // Split the camelCaseString into words using regular expression
@@ -102,15 +107,23 @@ function GridPage() {
                     ))}
                   </div>
                   <div className="rounded-xl  dark:border-gray-950 grid grid-cols-3 grid-rows-3 overflow-hidden gap-1">
-                    {squares.map((val) => (
+                    {squares.map((val, index) => (
                       <button
                         className="border-r border-b hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-center w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48 transition-colors duration-75 overflow-hidden dark:border-gray-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#59d185] focus-visible:z-50"
-                        key={val.toString()}
+                        key={val.gridSelection.toString()}
                         onClick={() => {
-                          setGridSelected(val);
+                          setGridSelected(index);
                         }}
-                      />
-                    ))}
+                      >
+                      {val?.poster && (
+                          <img
+                          src={`https://image.tmdb.org/t/p/w500${val.poster}`}
+                          className="w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48  object-cover rounded-lg mr-1"
+                          alt=""
+                        />
+                        )}
+                    </button>
+                  ))}
                   </div>
                 </div>
               </div>
@@ -124,11 +137,14 @@ function GridPage() {
           </div>
         )}
       </div>
-      {gridSelected && rows && cols && (
+      {gridSelected >= 0 && rows && cols && (
         <GuessPanel
-          rowActor={rows[gridSelected[0]]}
-          colActor={cols[gridSelected[1]]}
+          rowActor={rows[squares[gridSelected].gridSelection[0]]}
+          colActor={cols[squares[gridSelected].gridSelection[1]]}
+          squares={squares}
+          setSquares={setSquares}
           setCount={setCount}
+          gridSelected={gridSelected}
           setGridSelected={setGridSelected}
         />
       )}
