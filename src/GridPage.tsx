@@ -35,13 +35,20 @@ function GridPage() {
 
   // const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
   const currentDate = useMemo(() => {
-    // Function to get the current date in 'YYYY-MM-DD' format
-
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+    const currentUtcTime = new Date();
+    // Offset for Eastern Standard Time (EST) is UTC-5 hours.
+    const offsetHours = -5;
+    const eastCoastTime = new Date(
+      currentUtcTime.getTime() + offsetHours * 60 * 60 * 1000
+    );
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    };
+    const formattedDate = eastCoastTime.toLocaleString("en-US", options);
+    console.log(formattedDate);
+    return formattedDate;
   }, []);
 
   const initialState = JSON.parse(localStorage.getItem("state") ?? "{}")?.[
