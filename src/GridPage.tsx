@@ -11,7 +11,8 @@ function GridPage() {
   }
 
   interface Squares {
-    gridSelection: number[];
+    0: number;
+    1: number;
   }
 
   // Row Actor IDs
@@ -22,15 +23,15 @@ function GridPage() {
   const [gridSelected, setGridSelected] = useState<number | null>();
   const [squares, setSquares] = useState<Squares[]>([
     // [row, col]
-    { gridSelection: [0, 0] },
-    { gridSelection: [0, 1] },
-    { gridSelection: [0, 2] },
-    { gridSelection: [1, 0] },
-    { gridSelection: [1, 1] },
-    { gridSelection: [1, 2] },
-    { gridSelection: [2, 0] },
-    { gridSelection: [2, 1] },
-    { gridSelection: [2, 2] },
+    [0, 0],
+    [0, 1],
+    [0, 2],
+    [1, 0],
+    [1, 1],
+    [1, 2],
+    [2, 0],
+    [2, 1],
+    [2, 2],
   ]);
 
   // const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
@@ -51,17 +52,20 @@ function GridPage() {
     return formattedDate;
   }, []);
 
-  const initialState = JSON.parse(localStorage.getItem("state") ?? "{}")?.[
-    currentDate
-  ] ?? {
+  const defaultState = {
     correctAnswers: [null, null, null, null, null, null, null, null, null],
     incorrectAnswers: [[], [], [], [], [], [], [], [], []],
     guesses: 0,
   };
 
+  const initialState = JSON.parse(localStorage.getItem("state") ?? "{}")?.[
+    currentDate
+  ] ?? { ...defaultState };
+
   const SET_CORRECT_ANSWER = "SET_CORRECT_ANSWER";
   const SET_INCORRECT_ANSWER = "SET_INCORRECT_ANSWER";
   const INCRIMENT_GUESSES = "INCRIMENT_GUESSES";
+  const RESET_STATE = "RESET_STATE";
 
   // Reducer function
   const reducer = (state, action) => {
@@ -84,6 +88,9 @@ function GridPage() {
       case INCRIMENT_GUESSES:
         return { ...state, guesses: state.guesses + 1 };
 
+      case RESET_STATE:
+        return defaultState;
+
       default:
         return state;
     }
@@ -103,6 +110,10 @@ function GridPage() {
 
   const incrementGuesses = () => {
     dispatch({ type: INCRIMENT_GUESSES });
+  };
+
+  const resetState = () => {
+    dispatch({ type: RESET_STATE });
   };
 
   // function camelCaseToReadable(camelCaseString) {
@@ -139,6 +150,9 @@ function GridPage() {
         Total Guesses
       </div>
       <div className="text-center text-7xl font-semibold">{guesses}</div>
+      <button onClick={resetState} className="mt-2">
+        Reset
+      </button>
     </div>
   );
 
@@ -180,7 +194,7 @@ function GridPage() {
                     {squares.map((val, index) => (
                       <button
                         className="border-r border-b hover:bg-gray-100 dark:hover:bg-gray-700 p-0 cursor-pointer flex items-center justify-center w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48 transition-colors duration-75 overflow-hidden dark:border-gray-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#59d185] focus-visible:z-50"
-                        key={val.gridSelection.toString()}
+                        key={val.toString()}
                         onClick={() => {
                           setGridSelected(index);
                         }}
@@ -214,8 +228,8 @@ function GridPage() {
       </div>
       {gridSelected >= 0 && rows && cols && (
         <GuessPanel
-          rowActor={rows[squares[gridSelected].gridSelection[0]]}
-          colActor={cols[squares[gridSelected].gridSelection[1]]}
+          rowActor={rows[squares[gridSelected][0]]}
+          colActor={cols[squares[gridSelected][1]]}
           setSquares={setSquares}
           gridSelected={gridSelected}
           setGridSelected={setGridSelected}
