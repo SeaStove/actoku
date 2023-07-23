@@ -52,6 +52,12 @@ export default function GuessPanel({
     }
   }, [cast]);
 
+  const doesIdExist = (array: any[], id: number): boolean => {
+    const filteredArray = array.filter(obj => obj !== null && obj.id === id);
+    return filteredArray.length > 0; // Return true if any matching ID is found
+  }
+  
+
   const checkIfActorsInMovie = (cast, movie) => {
     let notInMovie: string[] = [];
     const actorsInMovie = cast.filter(
@@ -87,11 +93,11 @@ export default function GuessPanel({
 
     return (
       <button
-        disabled={correctAnswers.includes(movie.id)}
+        disabled={doesIdExist(correctAnswers, movie.id)}
         className={
           "flex items-center justify-start w-full px-2" +
           " " +
-          (correctAnswers.includes(movie.id) ? "previouslySelected" : "")
+          (doesIdExist(correctAnswers, movie.id) ? "previouslySelected" : "")
         }
         onClick={() => onMovieSelect(movie)}
       >
