@@ -52,9 +52,13 @@ export default function GuessPanel({
     }
   }, [cast]);
 
-  const doesIdExist = (array: any[], id: number): boolean => {
-    const filteredArray = array.filter(obj => obj !== null && obj.id === id);
-    return filteredArray.length > 0; // Return true if any matching ID is found
+  const doesIdExist = (array: any[], id: number, gridSelection?: number): boolean => {
+    if(gridSelection >= 0){
+      return incorrectAnswers?.[gridSelected].includes(id);
+    } else {
+      const filteredArray = array.filter(obj => obj !== null && obj.id === id);
+      return filteredArray.length > 0; // Return true if any matching ID is found
+    }
   }
   
 
@@ -93,11 +97,11 @@ export default function GuessPanel({
 
     return (
       <button
-        disabled={doesIdExist(correctAnswers, movie.id)}
+        disabled={(doesIdExist(correctAnswers, movie.id) || doesIdExist(incorrectAnswers, movie.id, gridSelected))}
         className={
           "flex items-center justify-start w-full px-2" +
           " " +
-          (doesIdExist(correctAnswers, movie.id) ? "previouslySelected" : "")
+          ((doesIdExist(correctAnswers, movie.id) || doesIdExist(incorrectAnswers, movie.id, gridSelected)) ? "previouslySelected" : "")
         }
         onClick={() => onMovieSelect(movie)}
       >
