@@ -120,6 +120,7 @@ export default function GuessPanel({
           e.stopPropagation();
         }}
       >
+        <button onClick={() => setGridSelected(-1)} className="closeButton" style={{position: 'absolute', top: '5px', right: '5px'}}>X</button>
         {inMovie && (
           <div className="text-center text-2xl text-green-500  flex justify-center items-center mt-4">
             {rowActor.name} and {colActor.name} were in it

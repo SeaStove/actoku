@@ -6,3 +6,11 @@ button:disabled:hover,
 button[disabled]:hover {
     border-color: rgba(26, 26, 26, 1);
 }
+
+.closeButton{
+    background-color: (30 41 59 / var(--tw-bg-opacity));
+    padding: 0.4em 0.8em;
+    position: absolute; 
+    top: 5px; 
+    right: 5px;
+}
