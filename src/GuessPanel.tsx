@@ -52,15 +52,20 @@ export default function GuessPanel({
     }
   }, [cast]);
 
-  const doesIdExist = (array: any[], id: number, gridSelection?: number): boolean => {
-    if(gridSelection >= 0){
+  const doesIdExist = (
+    array: any[],
+    id: number,
+    gridSelection?: number
+  ): boolean => {
+    if (gridSelection >= 0) {
       return incorrectAnswers?.[gridSelected].includes(id);
     } else {
-      const filteredArray = array.filter(obj => obj !== null && obj.id === id);
+      const filteredArray = array.filter(
+        (obj) => obj !== null && obj.id === id
+      );
       return filteredArray.length > 0; // Return true if any matching ID is found
     }
-  }
-  
+  };
 
   const checkIfActorsInMovie = (cast, movie) => {
     let notInMovie: string[] = [];
@@ -97,11 +102,17 @@ export default function GuessPanel({
 
     return (
       <button
-        disabled={(doesIdExist(correctAnswers, movie.id) || doesIdExist(incorrectAnswers, movie.id, gridSelected))}
+        disabled={
+          doesIdExist(correctAnswers, movie.id) ||
+          doesIdExist(incorrectAnswers, movie.id, gridSelected)
+        }
         className={
           "flex items-center justify-start w-full px-2" +
           " " +
-          ((doesIdExist(correctAnswers, movie.id) || doesIdExist(incorrectAnswers, movie.id, gridSelected)) ? "previouslySelected" : "")
+          (doesIdExist(correctAnswers, movie.id) ||
+          doesIdExist(incorrectAnswers, movie.id, gridSelected)
+            ? "previouslySelected"
+            : "")
         }
         onClick={() => onMovieSelect(movie)}
       >
@@ -119,13 +130,13 @@ export default function GuessPanel({
 
   return (
     <div
-      className="fixed inset-0 bg-gray-300 dark:bg-slate-600 dark:bg-opacity-50 bg-opacity-50 overflow-y-auto h-full w-full p-2"
+      className="fixed inset-0 bg-slate-600  bg-opacity-50 overflow-y-auto h-full w-full p-2"
       onClick={() => {
         setGridSelected(-1);
       }}
     >
       <div
-        className="relative top-20 mx-auto p-5 drop-shadow sm:w-96 shadow-lg rounded-md bg-white dark:bg-slate-800"
+        className="relative top-20 mx-auto p-5 drop-shadow sm:w-96 shadow-lg rounded-md bg-slate-800"
         onClick={(e) => {
           e.stopPropagation();
         }}
@@ -173,7 +184,7 @@ export default function GuessPanel({
                   : ""
               }
             />
-            <button onClick={() => setSearchQuery('')} className="clear-button">
+            <button onClick={() => setSearchQuery("")} className="clear-button">
               <div>X</div>
             </button>
           </div>

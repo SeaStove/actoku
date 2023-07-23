@@ -146,7 +146,7 @@ function GridPage() {
 
   const GuessBlock = () => (
     <div>
-      <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase text-center">
+      <div className="text-xs font-semibold text-gray-300 uppercase text-center">
         Total Guesses
       </div>
       <div className="text-center text-7xl font-semibold">{guesses}</div>
@@ -190,10 +190,10 @@ function GridPage() {
                       />
                     ))}
                   </div>
-                  <div className="rounded-xl  dark:border-gray-950 grid grid-cols-3 grid-rows-3 overflow-hidden gap-1">
+                  <div className="rounded-xl  border-gray-950 grid grid-cols-3 grid-rows-3 overflow-hidden gap-1">
                     {squares.map((val, index) => (
                       <button
-                        className="border-r border-b hover:bg-gray-100 dark:hover:bg-gray-700 p-0 cursor-pointer flex items-center justify-center w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48 transition-colors duration-75 overflow-hidden dark:border-gray-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#59d185] focus-visible:z-50"
+                        className="border-r border-b hover:bg-gray-700 p-0 cursor-pointer flex items-center justify-center w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48 transition-colors duration-75 overflow-hidden border-gray-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#59d185] focus-visible:z-50"
                         key={val.toString()}
                         onClick={() => {
                           setGridSelected(index);
