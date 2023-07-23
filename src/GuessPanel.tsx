@@ -120,6 +120,18 @@ export default function GuessPanel({
           e.stopPropagation();
         }}
       >
+        {inMovie && (
+          <div className="text-center text-2xl text-green-500  flex justify-center items-center mt-4">
+            {rowActor.name} and {colActor.name} were in it
+          </div>
+        )}
+        {inMovie === false && (
+          <div className="text-center text-2xl text-red-500 flex justify-center items-center mt-4">
+            {excluded.length > 1
+              ? `${rowActor.name} and ${colActor.name} were not in it`
+              : `${excluded[0]} was not in it`}
+          </div>
+        )}
         <div className="mt-3 text-center p-4">
           <div className="text-2xl font-bold">Name the Movie</div>
           <div className="text-gray-500">
@@ -152,18 +164,6 @@ export default function GuessPanel({
               {movies.results.slice(0, 5).map((movie) => (
                 <MovieButton movie={movie} key={movie.id} />
               ))}
-            </div>
-          )}
-          {inMovie && (
-            <div className="text-center text-2xl text-green-500  flex justify-center items-center mt-4">
-              {rowActor.name} and {colActor.name} were in it
-            </div>
-          )}
-          {inMovie === false && (
-            <div className="text-center text-2xl text-red-500 flex justify-center items-center mt-4">
-              {excluded.length > 1
-                ? `${rowActor.name} and ${colActor.name} were not in it`
-                : `${excluded[0]} was not in it`}
             </div>
           )}
         </div>
