@@ -7,10 +7,26 @@ button[disabled]:hover {
     border-color: rgba(26, 26, 26, 1);
 }
 
-.closeButton{
+.close-button{
     background-color: (30 41 59 / var(--tw-bg-opacity));
     padding: 0.4em 0.8em;
     position: absolute; 
     top: 5px; 
     right: 5px;
+}
+
+.clear-button{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(88, 88, 88);
+    padding: 1em 1em;
+    margin-right: 0.5em;
+}
+
+input:focus{
+    outline: none;
 }

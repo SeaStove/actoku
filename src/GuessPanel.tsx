@@ -120,7 +120,13 @@ export default function GuessPanel({
           e.stopPropagation();
         }}
       >
-        <button onClick={() => setGridSelected(-1)} className="closeButton" style={{position: 'absolute', top: '5px', right: '5px'}}>X</button>
+        <button
+          onClick={() => setGridSelected(-1)}
+          className="close-button"
+          style={{ position: "absolute", top: "5px", right: "5px" }}
+        >
+          X
+        </button>
         {inMovie && (
           <div className="text-center text-2xl text-green-500  flex justify-center items-center mt-4">
             {rowActor.name} and {colActor.name} were in it
@@ -138,11 +144,14 @@ export default function GuessPanel({
           <div className="text-gray-500">
             {colActor.name} and {rowActor.name}
           </div>
-          <div className="flex items-center justify-centerw-full mt-4">
+          <div
+            style={{ backgroundColor: "rgb(59 59 59)" }}
+            className="flex items-center justify-centerw-full mt-4 rounded-lg guess-field"
+          >
             <input
               autoFocus
               type="text"
-              className={`w-full rounded-lg h-12 px-2`}
+              className={`w-full h-12 px-2`}
               placeholder="Search for a movie"
               value={searchQuery}
               onChange={(e) => {
@@ -154,6 +163,9 @@ export default function GuessPanel({
                   : ""
               }
             />
+            <button onClick={() => setSearchQuery('')} className="clear-button">
+              <div>X</div>
+            </button>
           </div>
           {searchQuery.length > 0 && isLoading && (
             <div className="flex items-center justify-center mt-2">
