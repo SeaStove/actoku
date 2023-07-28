@@ -283,9 +283,9 @@ function GridPage() {
         </p>
       </div>
       {areInstructionsOpen || !test ? 
-        <div className="fixed inset-0 bg-gray-300 dark:bg-slate-600 dark:bg-opacity-50 bg-opacity-50 overflow-y-auto h-full w-full z-10">
-          <div className="relative top-20 mx-auto p-5 drop-shadow-lg w-96 shadow-lg rounded-md bg-white dark:bg-slate-800">
-            <div className="mt-3 dark:text-slate-50">
+        <div className="fixed inset-0 bg-slate-600 bg-opacity-50 overflow-y-auto h-full w-full z-10">
+          <div className="relative top-20 mx-auto p-5 drop-shadow-lg w-96 shadow-lg rounded-md bg-slate-800">
+            <div className="mt-3 text-slate-50">
               <h3 className="text-xl leading-6 mb-2 font-semibold text-center">Instructions</h3>
               <ul className="list-disc px-4">
                 {instructions.map((i, idx) => <li key={idx} className="py-1">{i}</li>)}
