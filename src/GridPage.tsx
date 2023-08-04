@@ -153,8 +153,8 @@ function GridPage() {
 
   //   return readableString;
   // }
-  const [test, setTest] = useState(
-    JSON.parse(localStorage.getItem("instructionsViewedNew") ?? "false")
+  const [instructionsViewed, setInstructionsViewed] = useState(
+    JSON.parse(localStorage.getItem("instructionsViewed") ?? "false")
   );
 
   useEffect(() => {
@@ -318,7 +318,7 @@ function GridPage() {
           <a href="https://github.com/SeaStove/actoku/issues">issues</a> tab.
         </p>
       </div>
-      {areInstructionsOpen || !test ? (
+      {areInstructionsOpen || !instructionsViewed ? (
         <div className="fixed inset-0 bg-slate-600 bg-opacity-50 overflow-y-auto h-full w-full z-10">
           <div className="relative top-20 mx-auto p-5 drop-shadow-lg w-96 shadow-lg rounded-md bg-slate-800">
             <div className="mt-3 text-slate-50">
@@ -336,8 +336,8 @@ function GridPage() {
                 <button
                   onClick={() => {
                     setAreInstructionsOpen(false);
-                    setTest(true);
-                    localStorage.setItem("instructionsViewedNew", "true");
+                    setInstructionsViewed(true);
+                    localStorage.setItem("instructionsViewed", "true");
                   }}
                   className="px-4 py-2 mb-4 text-white shadow-sm focus:outline-none text-lg rounded-md w-full"
                 >
