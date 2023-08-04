@@ -2,6 +2,8 @@ import { useState, useEffect, useReducer, useMemo } from "react";
 import GuessPanel from "./GuessPanel";
 import mockdata from "./assets/mockdata.json";
 import LoadingSpinner from "./LoadingSpinner";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 function GridPage() {
   interface ActorData {
@@ -123,6 +125,7 @@ function GridPage() {
 
   const [state, dispatch] = useReducer(reducer, initialState);
   const { correctAnswers, incorrectAnswers, guesses, dailyMovieInfo } = state;
+  const [finished, setFinished] = useState(false);
 
   // Helper functions to dispatch actions
   const setCorrectAnswer = (value, gridSelected) => {
@@ -139,6 +142,21 @@ function GridPage() {
 
   const resetState = () => {
     dispatch({ type: RESET_STATE });
+  };
+
+  const { mutate: updateGuessHistory } = useMutation(
+    async (data: { guesses: number; squares: [number | null] }) => {
+      const { data: response } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}guesses`,
+        data
+      );
+      return response.data;
+    }
+  );
+
+  const finish = () => {
+    setFinished(true);
+    updateGuessHistory({ guesses, squares: correctAnswers });
   };
 
   // function camelCaseToReadable(camelCaseString) {
@@ -186,6 +204,9 @@ function GridPage() {
       <div className="text-center text-7xl font-semibold">{guesses}</div>
       <button onClick={resetState} className="mt-2 w-full">
         Reset
+      </button>
+      <button onClick={finish} className="mt-2 w-full">
+        Finish
       </button>
     </div>
   );
