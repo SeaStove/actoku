@@ -2,7 +2,7 @@ import axios from "axios";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import GridPage from "./GridPage";
 
-const baseUrl = "https://actoku-backend.onrender.com/api/";
+const baseUrl = "https://api.actoku.com/";
 
 const queryClient = new QueryClient({
   defaultOptions: {
