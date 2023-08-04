@@ -60,7 +60,6 @@ function GridPage() {
       day: "2-digit",
     };
     const formattedDate = eastCoastTime.toLocaleString("en-US", options);
-    console.log(formattedDate);
     return formattedDate;
   }, []);
 
@@ -115,7 +114,7 @@ function GridPage() {
         return { ...state, guesses: state.guesses + 1 };
 
       case RESET_STATE:
-        return { ...defaultState, dailyMovieInfo: { ...state.dailyMovieInfo } };
+        return { ...defaultState, dailyMovieInfo: {} };
 
       default:
         return state;
