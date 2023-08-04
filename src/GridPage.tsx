@@ -33,6 +33,18 @@ function GridPage() {
     [2, 1],
     [2, 2],
   ]);
+  const [areInstructionsOpen, setAreInstructionsOpen] = useState(false);
+  const instructions = useMemo(() => {
+    return [
+      "Choose a movie in the cell that meets the row and column criteria.",
+      "The movie must contain both actors/actresses in it to be counted.",
+      "A movie can only be used once.",
+      "Once a movie is chosen, the guess cannot be changed.",
+      "Every guess counts, regardless of its correctness.",
+      "Uniqueness is calculated from the sum of the percentages, plus 100 for every empty cell. The lower the score, the more rare each movie pick was.",
+      "A new game is available every day.",
+    ];
+  }, []);
 
   // const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
   const currentDate = useMemo(() => {
@@ -130,6 +142,21 @@ function GridPage() {
     dispatch({ type: RESET_STATE });
   };
 
+  // function camelCaseToReadable(camelCaseString) {
+  //   // Split the camelCaseString into words using regular expression
+  //   const words = camelCaseString.split(/(?=[A-Z])/);
+
+  //   // Capitalize the first letter of each word and join them back
+  //   const readableString = words
+  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+  //     .join(" ");
+
+  //   return readableString;
+  // }
+  const [test, setTest] = useState(
+    JSON.parse(localStorage.getItem("instructionsViewedNew") ?? "false")
+  );
+
   useEffect(() => {
     setRows(mockdata.row as ActorData[]);
     setCols(mockdata.column as ActorData[]);
@@ -158,17 +185,25 @@ function GridPage() {
         Total Guesses
       </div>
       <div className="text-center text-7xl font-semibold">{guesses}</div>
-      <button onClick={resetState} className="mt-2">
+      <button onClick={resetState} className="mt-2 w-full">
         Reset
       </button>
     </div>
   );
 
   return (
-    <div className="w-screen h-full min-h-screen flex justify-center items-center  text-white flex-col pr-4">
-      <h1 className="w-full text-center md:text-left p-4 text-8xl md:text-3xl">
-        Actoku
-      </h1>
+    <div className="w-full h-full min-h-screen flex justify-center items-center  text-white flex-col">
+      <div className="w-full p-4 flex sm:flex-row xxs:flex-col">
+        <h1 className="xxs:text-center xxs:mb-1 xl:w-11/12 lg:w-10/12 md:w-9/12 sm:w-9/12 xxs:w-full xxs:justify-center md:text-left xxs:text-7xl sm:text-3xl sm:text-left sm:text-3xl xxs:text-3xl xxs:text-left xxs:text-3xl">
+          Actoku
+        </h1>
+        <button
+          onClick={() => setAreInstructionsOpen(true)}
+          className="xl:w-1/12 lg:w-2/12 md:w-3/12 sm:w-3/12 xs:w-5/12 xxs:w-6/12 xxs:self-center"
+        >
+          How to play
+        </button>
+      </div>
       <div className="mt-4 flex flex-row flex-shrink-0 flex-grow justify-center pr-4 mr:pr-0">
         {!cols || !rows ? (
           <LoadingSpinner />
@@ -259,7 +294,7 @@ function GridPage() {
           incrementGuesses={incrementGuesses}
         />
       )}
-      <div className="text-gray-500 mt-4 mb-2 hidden sm:flex flex-col justify-center items-center text-center">
+      <div className="text-gray-500 hidden sm:flex flex-col justify-center items-center text-center">
         <p>
           This game was made by{" "}
           <a href="https://github.com/ChaseGHMU" target="_blank">
@@ -283,6 +318,38 @@ function GridPage() {
           <a href="https://github.com/SeaStove/actoku/issues">issues</a> tab.
         </p>
       </div>
+      {areInstructionsOpen || !test ? (
+        <div className="fixed inset-0 bg-slate-600 bg-opacity-50 overflow-y-auto h-full w-full z-10">
+          <div className="relative top-20 mx-auto p-5 drop-shadow-lg w-96 shadow-lg rounded-md bg-slate-800">
+            <div className="mt-3 text-slate-50">
+              <h3 className="text-xl leading-6 mb-2 font-semibold text-center">
+                Instructions
+              </h3>
+              <ul className="list-disc px-4">
+                {instructions.map((i, idx) => (
+                  <li key={idx} className="py-1">
+                    {i}
+                  </li>
+                ))}
+              </ul>
+              <div className="items-center px-4 pt-6 pb-2">
+                <button
+                  onClick={() => {
+                    setAreInstructionsOpen(false);
+                    setTest(true);
+                    localStorage.setItem("instructionsViewedNew", "true");
+                  }}
+                  className="px-4 py-2 mb-4 text-white shadow-sm focus:outline-none text-lg rounded-md w-full"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

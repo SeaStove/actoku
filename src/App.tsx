@@ -18,7 +18,9 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <GridPage />
+      <div className="h-100 w-100">
+        <GridPage />
+      </div>
     </QueryClientProvider>
   );
 }
