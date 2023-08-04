@@ -60,9 +60,7 @@ export default function GuessPanel({
     if (gridSelection >= 0) {
       return incorrectAnswers?.[gridSelected].includes(id);
     } else {
-      const filteredArray = array.filter(
-        (obj) => obj !== null && obj.id === id
-      );
+      const filteredArray = array.filter((_id) => _id === id);
       return filteredArray.length > 0; // Return true if any matching ID is found
     }
   };

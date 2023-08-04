@@ -58,9 +58,15 @@ function GridPage() {
     guesses: 0,
   };
 
-  const initialState = JSON.parse(localStorage.getItem("state") ?? "{}")?.[
-    currentDate
-  ] ?? { ...defaultState };
+  const initialState = useMemo(() => {
+    const guessHistory = JSON.parse(
+      localStorage.getItem("guessHistory") ?? "{}"
+    )?.[currentDate] ?? { ...defaultState };
+    const dailyMovieInfo = JSON.parse(
+      localStorage.getItem("dailyMovieInfo") ?? "{}"
+    );
+    return { ...guessHistory, dailyMovieInfo };
+  }, []);
 
   const SET_CORRECT_ANSWER = "SET_CORRECT_ANSWER";
   const SET_INCORRECT_ANSWER = "SET_INCORRECT_ANSWER";
@@ -69,13 +75,21 @@ function GridPage() {
 
   // Reducer function
   const reducer = (state, action) => {
+    console.log(state);
     const { value, gridSelected } = action.payload ?? {};
     switch (action.type) {
       case SET_CORRECT_ANSWER:
-        const { id, poster_path } = value;
+        const { id } = value;
         const updatedCorrectAnswers = [...state.correctAnswers];
-        updatedCorrectAnswers[gridSelected] = { id, poster: poster_path };
-        return { ...state, correctAnswers: updatedCorrectAnswers };
+        updatedCorrectAnswers[gridSelected] = id;
+        console.log(state);
+        const updatedDailyMovieInfo = { ...state.dailyMovieInfo };
+        updatedDailyMovieInfo[id] = value;
+        return {
+          ...state,
+          correctAnswers: updatedCorrectAnswers,
+          dailyMovieInfo: updatedDailyMovieInfo,
+        };
 
       case SET_INCORRECT_ANSWER:
         const updatedIncorrectAnswers = [...state.incorrectAnswers];
@@ -89,7 +103,7 @@ function GridPage() {
         return { ...state, guesses: state.guesses + 1 };
 
       case RESET_STATE:
-        return defaultState;
+        return { ...defaultState, dailyMovieInfo: { ...state.dailyMovieInfo } };
 
       default:
         return state;
@@ -97,7 +111,7 @@ function GridPage() {
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { correctAnswers, incorrectAnswers, guesses } = state;
+  const { correctAnswers, incorrectAnswers, guesses, dailyMovieInfo } = state;
 
   // Helper functions to dispatch actions
   const setCorrectAnswer = (value, gridSelected) => {
@@ -116,22 +130,6 @@ function GridPage() {
     dispatch({ type: RESET_STATE });
   };
 
-  // function camelCaseToReadable(camelCaseString) {
-  //   // Split the camelCaseString into words using regular expression
-  //   const words = camelCaseString.split(/(?=[A-Z])/);
-
-  //   // Capitalize the first letter of each word and join them back
-  //   const readableString = words
-  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-  //     .join(" ");
-
-  //   return readableString;
-  // }
-
-  const guessHistory = useMemo(() => {
-    return JSON.parse(localStorage.getItem("state") ?? "{}");
-  }, []);
-
   useEffect(() => {
     setRows(mockdata.row as ActorData[]);
     setCols(mockdata.column as ActorData[]);
@@ -139,8 +137,18 @@ function GridPage() {
 
   useEffect(() => {
     if (state) {
-      const updatedState = { ...guessHistory, [currentDate]: { ...state } };
-      localStorage.setItem("state", JSON.stringify(updatedState));
+      const { dailyMovieInfo = {}, ...restOfState } = {
+        ...state,
+      };
+      const guessHistory = JSON.parse(
+        localStorage.getItem("guessHistory") ?? "{}"
+      );
+      const updatedGuessHistory = {
+        ...guessHistory,
+        [currentDate]: restOfState,
+      };
+      localStorage.setItem("guessHistory", JSON.stringify(updatedGuessHistory));
+      localStorage.setItem("dailyMovieInfo", JSON.stringify(dailyMovieInfo));
     }
   }, [state]);
 
@@ -199,15 +207,26 @@ function GridPage() {
                           setGridSelected(index);
                         }}
                       >
-                        {correctAnswers?.[index]?.poster && (
+                        {dailyMovieInfo?.[correctAnswers?.[index]] && (
                           <div className="relative">
                             <img
-                              src={`https://image.tmdb.org/t/p/w500${correctAnswers?.[index]?.poster}`}
+                              src={`https://image.tmdb.org/t/p/w500${
+                                dailyMovieInfo?.[correctAnswers?.[index]]
+                                  ?.poster_path
+                              }`}
                               className="image w-20 sm:w-36 md:w-48 h-20 sm:h-36 md:h-48  object-cover rounded-lg mr-1"
                               alt=""
                             />
-                            <div className="opacity-0 hover:opacity-100 whitespace-pre opacity-100 duration-300 absolute inset-0 z-1 flex justify-center items-end bg-gradient-to-t from-green-500 from-5% to-50% text-base text-white font-semibold break-words">
-                              {"Ocean's Eleven \n25%"}
+                            <div className="hover:opacity-100 whitespace-pre opacity-100 duration-300 absolute inset-0 z-1 flex flex-col justify-end items-center bg-gradient-to-t from-green-500 from-5% to-50% text-base text-white font-semibold break-words">
+                              <span>{`${
+                                dailyMovieInfo?.[correctAnswers?.[index]]?.title
+                              }`}</span>
+                              <span className="text-xs text-slate-300">
+                                {`${
+                                  dailyMovieInfo?.[correctAnswers?.[index]]
+                                    ?.release_date
+                                }`}
+                              </span>
                             </div>
                           </div>
                         )}
