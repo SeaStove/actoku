@@ -34,12 +34,14 @@ export default function GuessPanel({
     results: { id; poster_path }[];
   }>([`search/movie?query=${searchQuery}`], {
     enabled: searchQuery.length > 0,
+    retry: false
   });
 
   const { data: credits } = useQuery<{
     cast: { id }[];
   }>([`movie/${movieId}/credits`], {
     enabled: movieId.length > 0,
+    retry: false
   });
 
   const cast = credits?.cast;
