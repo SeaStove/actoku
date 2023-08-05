@@ -26,6 +26,10 @@ export default function GuessPanel({
 
   const [excluded, setExcluded] = useState<string[]>([]);
 
+  const [timer, setTimer] = useState(null);
+
+  const [inputPlaceholder, setInputPlaceholder] = useState("");
+
   const { data: movies, isLoading } = useQuery<{
     results: { id; poster_path }[];
   }>([`search/movie?query=${searchQuery}`], {
@@ -44,6 +48,19 @@ export default function GuessPanel({
     setSelectedMovie(movie);
     setMovieId(`${movie.id}`);
     incrementGuesses();
+  };
+
+  const inputDelay = (value) => {
+    setInputPlaceholder(value);
+    if (timer) {
+      clearTimeout(timer);
+      setTimer(null);
+    }
+    setTimer(
+      setTimeout(() => {
+        setSearchQuery(value);
+      }, 1000)
+    );
   };
 
   useEffect(() => {
@@ -172,9 +189,9 @@ export default function GuessPanel({
               type="text"
               className={`w-full h-12 px-2`}
               placeholder="Search for a movie"
-              value={searchQuery}
+              value={inputPlaceholder}
               onChange={(e) => {
-                setSearchQuery(e.target.value);
+                inputDelay(e.target.value);
               }}
               onKeyDown={(e) =>
                 e.key === "Enter" && movies.results.length > 0
@@ -182,7 +199,7 @@ export default function GuessPanel({
                   : ""
               }
             />
-            <button onClick={() => setSearchQuery("")} className="clear-button">
+            <button onClick={() => {setInputPlaceholder(''); setSearchQuery("");}} className="clear-button">
               <div>X</div>
             </button>
           </div>
