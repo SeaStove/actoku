@@ -1,6 +1,11 @@
 import axios from "axios";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import GridPage from "./GridPage";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import PrivacyPolicy from "./PrivacyPolicy";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,11 +20,23 @@ const queryClient = new QueryClient({
   },
 });
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <GridPage />,
+  },
+  {
+    path: "/privacy-policy",
+    element: <PrivacyPolicy />,
+  },
+]);
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="h-100 w-100">
-        <GridPage />
+      <RouterProvider router={router} />
+        
       </div>
     </QueryClientProvider>
   );
