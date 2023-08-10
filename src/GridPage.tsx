@@ -126,6 +126,7 @@ function GridPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { correctAnswers, incorrectAnswers, guesses, dailyMovieInfo } = state;
   const [finished, setFinished] = useState(false);
+  const [isSummaryOpen, setIsSummaryOpen] = useState(false);
 
   // Helper functions to dispatch actions
   const setCorrectAnswer = (value, gridSelected) => {
@@ -157,6 +158,10 @@ function GridPage() {
   const finish = () => {
     setFinished(true);
     updateGuessHistory({ guesses, squares: correctAnswers });
+  };
+
+  const summary = () => {
+    setIsSummaryOpen(true);
   };
 
   // function camelCaseToReadable(camelCaseString) {
@@ -205,8 +210,8 @@ function GridPage() {
       <button onClick={resetState} className="mt-2 w-full">
         Reset
       </button>
-      <button onClick={finish} className="mt-2 w-full">
-        Finish
+      <button onClick={summary} className="mt-2 w-full">
+        Summary
       </button>
     </div>
   );
@@ -364,6 +369,174 @@ function GridPage() {
                   Close
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+      {isSummaryOpen ? (
+        <div className="fixed inset-0 bg-slate-600 bg-opacity-50 overflow-y-auto h-full w-full z-10">
+          <div className="relative md:top-20 top-10 mx-auto p-5 drop-shadow-lg w-96 shadow-lg rounded-md bg-slate-800">
+            <button
+              onClick={() => setIsSummaryOpen(false)}
+              className="close-button"
+              style={{ position: "absolute", top: "5px", right: "5px" }}
+            >
+              X
+            </button>
+            <div className="mt-3 text-center text-slate-50">
+              <h3 className="text-xl leading-6 mb-4 font-semibold">
+                Game Summary
+              </h3>
+              <div className="mb-4 text-left px-10 flex text-slate-50">
+                <div className="flex-1 text-center mr-2">
+                  <div className="text">Correct</div>
+                  <div className="text-2xl  font-bold">
+                    {correctAnswers.filter((i) => i).length} /{" "}
+                    {correctAnswers.length}
+                  </div>
+                </div>
+                <div className="flex-1 text-center">
+                  <div className="text">Score</div>
+                  <div className="text-2xl  font-bold">
+                    {correctAnswers.filter((i) => i).length * 100}
+                  </div>
+                </div>
+              </div>
+              <div className="mb-2">
+                <div className="flex flex-col gap-3 items-center">
+                  <div className="flex gap-3">
+                    <div
+                      className={
+                        (correctAnswers?.[0]
+                          ? "bg-emerald-600"
+                          : "bg-slate-700") +
+                        " " +
+                        "w-16 h-16 rounded-md"
+                      }
+                    ></div>
+                    <div
+                      className={
+                        (correctAnswers?.[1]
+                          ? "bg-emerald-600"
+                          : "bg-slate-700") +
+                        " " +
+                        "w-16 h-16 rounded-md"
+                      }
+                    ></div>
+                    <div
+                      className={
+                        (correctAnswers?.[2]
+                          ? "bg-emerald-600"
+                          : "bg-slate-700") +
+                        " " +
+                        "w-16 h-16 rounded-md"
+                      }
+                    ></div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div
+                      className={
+                        (correctAnswers?.[3]
+                          ? "bg-emerald-600"
+                          : "bg-slate-700") +
+                        " " +
+                        "w-16 h-16 rounded-md"
+                      }
+                    ></div>
+                    <div
+                      className={
+                        (correctAnswers?.[4]
+                          ? "bg-emerald-600"
+                          : "bg-slate-700") +
+                        " " +
+                        "w-16 h-16 rounded-md"
+                      }
+                    ></div>
+                    <div
+                      className={
+                        (correctAnswers?.[5]
+                          ? "bg-emrald-600"
+                          : "bg-slate-700") +
+                        " " +
+                        "w-16 h-16 rounded-md"
+                      }
+                    ></div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div
+                      className={
+                        (correctAnswers?.[6]
+                          ? "bg-emerald-600"
+                          : "bg-slate-700") +
+                        " " +
+                        "w-16 h-16 rounded-md"
+                      }
+                    ></div>
+                    <div
+                      className={
+                        (correctAnswers?.[7]
+                          ? "bg-emerald-600"
+                          : "bg-slate-700") +
+                        " " +
+                        "w-16 h-16 rounded-md"
+                      }
+                    ></div>
+                    <div
+                      className={
+                        (correctAnswers?.[8]
+                          ? "bg-emerald-600"
+                          : "bg-slate-700") +
+                        " " +
+                        "w-16 h-16 rounded-md"
+                      }
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex px-16 mb-4 justify-center">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `${correctAnswers.filter((i) => i).length * 100}`
+                    );
+                  }}
+                  className="rounded-lg px-2 py-1 bg-cyan-600 hover:bg-cyan-700 active:bg-cyan-800 text-white text-sm"
+                >
+                  Copy Score
+                </button>
+                {/* <button className="px-3 py-1 border rounded-lg text-sm shadow-sm hover:bg-slate-600">Notifications</button> */}
+              </div>
+              <hr className="mb-6 mx-8" />
+
+              {!finished ? (
+                <div className="flex px-12 justify-between">
+                  <button
+                    onClick={() => setIsSummaryOpen(false)}
+                    className="flex-1 px-2 py-1 border rounded-lg font-medium shadow-sm hover:bg-slate-600"
+                  >
+                    Keep Going
+                  </button>
+                  <button
+                    onClick={finish}
+                    className="flex-1 ml-2 px-2 py-1 rounded-lg font-medium shadow-sm bg-red-600 text-white"
+                  >
+                    End Game
+                  </button>
+                </div>
+              ) : (
+                <div className="flex px-12 justify-center">
+                  <button
+                    onClick={() => {
+                      console.log("stats");
+                    }}
+                    className="flex-1 ml-2 px-2 py-1 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white"
+                  >
+                    View Stats
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
