@@ -1,8 +1,7 @@
 import { useState, useEffect, useReducer, useMemo } from "react";
 import GuessPanel from "./GuessPanel";
-import mockdata from "./assets/mockdata.json";
 import LoadingSpinner from "./LoadingSpinner";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -36,20 +35,6 @@ function GridPage() {
     [2, 1],
     [2, 2],
   ]);
-  const [areInstructionsOpen, setAreInstructionsOpen] = useState(false);
-  const instructions = useMemo(() => {
-    return [
-      "Choose a movie in the cell that meets the row and column criteria.",
-      "The movie must contain both actors/actresses in it to be counted.",
-      "A movie can only be used once.",
-      "Once a movie is chosen, the guess cannot be changed.",
-      "Every guess counts, regardless of its correctness.",
-      "Uniqueness is calculated from the sum of the percentages, plus 100 for every empty cell. The lower the score, the more rare each movie pick was.",
-      "A new game is available every day.",
-    ];
-  }, []);
-
-  // const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
   const currentDate = useMemo(() => {
     const currentUtcTime = new Date();
     // Offset for Eastern Standard Time (EST) is UTC-5 hours.
@@ -65,6 +50,21 @@ function GridPage() {
     const formattedDate = eastCoastTime.toLocaleString("en-US", options);
     return formattedDate;
   }, []);
+
+  const [areInstructionsOpen, setAreInstructionsOpen] = useState(false);
+  const instructions = useMemo(() => {
+    return [
+      "Choose a movie in the cell that meets the row and column criteria.",
+      "The movie must contain both actors/actresses in it to be counted.",
+      "A movie can only be used once.",
+      "Once a movie is chosen, the guess cannot be changed.",
+      "Every guess counts, regardless of its correctness.",
+      "Uniqueness is calculated from the sum of the percentages, plus 100 for every empty cell. The lower the score, the more rare each movie pick was.",
+      "A new game is available every day.",
+    ];
+  }, []);
+
+  // const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
 
   const defaultState = {
     correctAnswers: [null, null, null, null, null, null, null, null, null],
@@ -89,14 +89,12 @@ function GridPage() {
 
   // Reducer function
   const reducer = (state, action) => {
-    console.log(state);
     const { value, gridSelected } = action.payload ?? {};
     switch (action.type) {
       case SET_CORRECT_ANSWER:
         const { id } = value;
         const updatedCorrectAnswers = [...state.correctAnswers];
         updatedCorrectAnswers[gridSelected] = id;
-        console.log(state);
         const updatedDailyMovieInfo = { ...state.dailyMovieInfo };
         updatedDailyMovieInfo[id] = value;
         return {
@@ -180,10 +178,36 @@ function GridPage() {
     JSON.parse(localStorage.getItem("instructionsViewed") ?? "false")
   );
 
+  const { data: gameData, refetch } = useQuery<{
+    row: {};
+    column: {};
+  }>([`game`], {
+    enabled: false,
+    retry: false,
+  });
+
   useEffect(() => {
-    setRows(mockdata.row as ActorData[]);
-    setCols(mockdata.column as ActorData[]);
-  }, []);
+    const cachedGameData = JSON.parse(localStorage.getItem("game") ?? "{}");
+    const isCachedGameToday = cachedGameData?.date === currentDate;
+
+    if (!isCachedGameToday) {
+      refetch();
+    } else {
+      setRows(cachedGameData.row as ActorData[]);
+      setCols(cachedGameData.column as ActorData[]);
+    }
+  }, [currentDate]);
+
+  useEffect(() => {
+    if (gameData) {
+      setRows(gameData.row as ActorData[]);
+      setCols(gameData.column as ActorData[]);
+      localStorage.setItem(
+        "game",
+        JSON.stringify({ ...gameData, date: currentDate })
+      );
+    }
+  }, [gameData]);
 
   useEffect(() => {
     if (state) {
@@ -232,7 +256,9 @@ function GridPage() {
       </div>
       <div className="mt-4 flex flex-row flex-shrink-0 flex-grow justify-center pr-4 mr:pr-0">
         {!cols || !rows ? (
-          <LoadingSpinner />
+          <div className="flex flex-grow flex-col items-center justify-center ">
+            <LoadingSpinner />
+          </div>
         ) : (
           <div className="flex flex-grow flex-col items-center justify-center ">
             <div className="flex flex-row items-center">
@@ -334,12 +360,12 @@ function GridPage() {
           <a href="https://github.com/SeaStove" target="_blank">
             Christian Stovall.{" "}
           </a>
-    
         </p>
         <p className="text-center">
-        <a href="https://github.com/SeaStove/actoku" target="_blank">
+          <a href="https://github.com/SeaStove/actoku" target="_blank">
             GitHub
-          </a> | <Link to="/privacy-policy">Privacy Policy</Link>
+          </a>{" "}
+          | <Link to="/privacy-policy">Privacy Policy</Link>
         </p>
       </div>
       {areInstructionsOpen || !instructionsViewed ? (

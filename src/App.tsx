@@ -1,10 +1,7 @@
 import axios from "axios";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import GridPage from "./GridPage";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PrivacyPolicy from "./PrivacyPolicy";
 
 const queryClient = new QueryClient({
@@ -35,8 +32,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="h-100 w-100">
-      <RouterProvider router={router} />
-        
+        <RouterProvider router={router} />
       </div>
     </QueryClientProvider>
   );
