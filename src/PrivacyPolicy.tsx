@@ -1,26 +1,28 @@
+import { Link } from "react-router-dom";
+
 export default function PrivacyPolicy() {
   return (
-    <div className="flex flex-col ">
+    <div className="p-4">
+      <div className="w-full flex sm:flex-row xxs:flex-col">
+        <Link to="/"><h1 className="text-3xl">
+          Back to Actoku
+        </h1></Link>
+      </div>
+    <div className="flex flex-col p-4">
       <h1>Privacy Policy</h1>
-
       <p>Last updated: August 10, 2023</p>
-
       <p>
         This page informs you of our policies regarding the collection, use, and
         disclosure of Personal Information we receive from users of the Site.
       </p>
-
       <h2>Information Collection and Use</h2>
-
       <p>
         While using our Site, we may ask you to provide us with certain
         personally identifiable information that can be used to contact or
         identify you. Personally identifiable information may include, but is
         not limited to your name ("Personal Information").
       </p>
-
       <h2>Log Data</h2>
-
       <p>
         Like many site operators, we collect information that your browser sends
         whenever you visit our Site ("Log Data"). This Log Data may include
@@ -79,6 +81,7 @@ export default function PrivacyPolicy() {
         If you have any questions about this Privacy Policy, please contact us
         at actokuteam@gmail.com.
       </p>
+    </div>
     </div>
   );
 }

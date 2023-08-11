@@ -4,6 +4,7 @@ import mockdata from "./assets/mockdata.json";
 import LoadingSpinner from "./LoadingSpinner";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function GridPage() {
   interface ActorData {
@@ -295,7 +296,7 @@ function GridPage() {
                   </div>
                 </div>
               </div>
-              <div className="sm:w-36 md:w-48 h-full mt-4 hidden sm:flex justify-center items-center">
+              <div className="sm:w-36 md:w-48 h-full mt-4 ml-4 hidden sm:flex justify-center items-center">
                 <GuessBlock />
               </div>
             </div>
@@ -319,7 +320,7 @@ function GridPage() {
           incrementGuesses={incrementGuesses}
         />
       )}
-      <div className="text-gray-500 hidden sm:flex flex-col justify-center items-center text-center">
+      <div className="text-gray-500 hidden sm:flex flex-col justify-center items-center text-center pb-2">
         <p>
           This game was made by{" "}
           <a href="https://github.com/ChaseGHMU" target="_blank">
@@ -333,14 +334,12 @@ function GridPage() {
           <a href="https://github.com/SeaStove" target="_blank">
             Christian Stovall.{" "}
           </a>
-          Check out the code on{" "}
-          <a href="https://github.com/SeaStove/actoku" target="_blank">
-            GitHub.
-          </a>
+    
         </p>
         <p className="text-center">
-          If you have any feature requests or bugs to report please do so in the{" "}
-          <a href="https://github.com/SeaStove/actoku/issues">issues</a> tab.
+        <a href="https://github.com/SeaStove/actoku" target="_blank">
+            GitHub
+          </a> | <Link to="/privacy-policy">Privacy Policy</Link>
         </p>
       </div>
       {areInstructionsOpen || !instructionsViewed ? (
